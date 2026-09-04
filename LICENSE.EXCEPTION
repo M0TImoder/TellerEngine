@@ -1,0 +1,147 @@
+                    TellerEngine Linking Exception
+                            Version 1.0
+
+Copyright (C) 2026 M0TImoder.
+
+Everyone is permitted to copy and distribute verbatim copies of this
+exception document, but changing it is not allowed.
+
+This document grants an additional permission ("the Exception") on top of
+the GNU General Public License, version 3, as published by the Free
+Software Foundation, a copy of which is distributed with this program in
+the file LICENSE ("the GPL"). This Exception is granted under section 7
+of the GPL.
+
+
+0. Scope
+--------
+
+The Exception applies to the whole of TellerEngine: every source file,
+header, build script, and data file in this repository, without
+distinction between the engine core, the tooling, the software
+development kit, and the components in the namespace Teller::Vanilla.
+
+No part of TellerEngine is excluded from the Exception. Determining
+whether a given part of TellerEngine is "vanilla" is not necessary in
+order to know which terms apply to your work.
+
+
+1. Statement of the Exception
+-----------------------------
+
+Linking TellerEngine statically or dynamically with other modules makes
+a combined work based on TellerEngine. Thus, the terms and conditions of
+the GPL cover the whole combination.
+
+As a special exception, the copyright holders of TellerEngine give you
+permission to combine TellerEngine with Independent Modules, as defined
+in section 2, to produce an executable or other combined work,
+regardless of the license terms of those Independent Modules, and to
+copy and distribute the resulting work under terms of your choice,
+provided that you also meet, for each Independent Module so combined,
+the terms and conditions of the license of that Independent Module, and
+provided that you comply with section 4 with respect to TellerEngine
+itself.
+
+
+2. Independent Modules
+----------------------
+
+An Independent Module is a module which is not derived from or based on
+TellerEngine, other than through the interfaces TellerEngine provides
+for that purpose.
+
+For the avoidance of doubt, none of the following, by itself, prevents a
+module from being an Independent Module:
+
+  (a) including public headers of TellerEngine;
+
+  (b) declaring, constructing, owning, or destroying instances of types
+      provided by TellerEngine;
+
+  (c) calling functions, methods, or operators provided by TellerEngine;
+
+  (d) deriving a C++ class from a class provided by TellerEngine,
+      overriding its virtual functions, and calling the base class
+      implementation from an override;
+
+  (e) specializing templates provided by TellerEngine, instantiating
+      them, or providing types that satisfy concepts declared by
+      TellerEngine;
+
+  (f) reading, referring to, or copying into the module the values of
+      constants, constexpr data, and descriptive tables published by
+      TellerEngine;
+
+  (g) implementing an interface declared by TellerEngine in order to
+      supply data, rendering, input, audio, or timing to it;
+
+  (h) reading or writing files, save data, or serialized state in
+      formats defined or used by TellerEngine.
+
+Paragraphs (a) through (h) are the intended use of TellerEngine as a
+library. A module that does these things and no more is an Independent
+Module, even though C++ makes such a module textually and structurally
+dependent on TellerEngine.
+
+
+3. Template, inline, and header material
+----------------------------------------
+
+Compiling an Independent Module against the headers of TellerEngine
+causes template instantiations, inline functions, constexpr data, and
+other header-resident material of TellerEngine to be copied into the
+object code of that Independent Module. The Exception covers that copied
+material: its presence in the object code of an Independent Module, and
+in any work combined from it, does not cause the GPL to apply to that
+Independent Module.
+
+This section does not permit copying header-resident material of
+TellerEngine into a work for a purpose other than compiling against
+those headers.
+
+
+4. What the Exception does not cover
+------------------------------------
+
+The Exception grants no permission to relicense TellerEngine itself.
+
+If you modify TellerEngine, or copy any part of its source into another
+work other than as described in sections 2 and 3, then the resulting
+version of TellerEngine, and that other work insofar as it contains such
+copied source, is a work based on TellerEngine and is governed by the
+GPL in full, including the obligation to make the corresponding source
+available under the GPL to the recipients of any work you convey.
+
+
+5. Extending, or removing, the Exception
+----------------------------------------
+
+If you modify TellerEngine, you may extend this Exception to your
+modified version, but you are not obligated to do so. If you do not wish
+to extend it, you may delete this Exception statement from your version.
+
+Deleting the Exception removes the additional permission and nothing
+else. It adds no restriction to the GPL itself, and it has no effect on
+the terms under which anyone received an earlier version.
+
+
+6. Note on game data
+--------------------
+
+TellerEngine is source code. This repository contains no game assets,
+and this document grants no rights whatsoever in any third party's
+assets, data files, or copyrighted works. Nothing here changes the terms
+under which you may possess or use any such material.
+
+
+7. Notice for source files
+--------------------------
+
+Source files of TellerEngine should carry the following notice:
+
+  TellerEngine
+  Copyright (C) 2026 M0TImoder.
+  Licensed under GPL-3.0 with the TellerEngine Linking Exception.
+  See LICENSE and LICENSE.EXCEPTION. This file may be used from an
+  Independent Module without that module becoming subject to the GPL.
