@@ -1,0 +1,99 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "Linux-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "Windows-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "Wasm-base",
+      "hidden": true,
+      "inherits": "base",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+    },
+    {
+      "name": "Linux-debug",
+      "inherits": "Linux-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TELLER_ENABLE_DEBUG_UI": "ON",
+        "TELLER_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "Linux-release",
+      "inherits": "Linux-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "TELLER_ENABLE_DEBUG_UI": "OFF",
+        "TELLER_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "Windows-debug",
+      "inherits": "Windows-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TELLER_ENABLE_DEBUG_UI": "ON",
+        "TELLER_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "Windows-release",
+      "inherits": "Windows-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "TELLER_ENABLE_DEBUG_UI": "OFF",
+        "TELLER_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "Wasm-debug",
+      "inherits": "Wasm-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TELLER_ENABLE_DEBUG_UI": "ON",
+        "TELLER_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "Wasm-release",
+      "inherits": "Wasm-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "TELLER_ENABLE_DEBUG_UI": "OFF",
+        "TELLER_BUILD_TESTS": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "Linux-debug",     "configurePreset": "Linux-debug" },
+    { "name": "Linux-release",   "configurePreset": "Linux-release" },
+    { "name": "Windows-debug",   "configurePreset": "Windows-debug" },
+    { "name": "Windows-release", "configurePreset": "Windows-release" },
+    { "name": "Wasm-debug",      "configurePreset": "Wasm-debug" },
+    { "name": "Wasm-release",    "configurePreset": "Wasm-release" }
+  ]
+}
