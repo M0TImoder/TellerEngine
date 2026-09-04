@@ -1,0 +1,12 @@
+---
+Language: Cpp
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+---
+Language: Json
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+...

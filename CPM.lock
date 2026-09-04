@@ -1,8 +1,8 @@
 # doctest v2.5.3
 CPMDeclarePackage(doctest
-    NAME doctest
-    GITHUB_REPOSITORY doctest/doctest
-    GIT_TAG 2d0a9359a60c51affe2a9bebb1be1dca47868151
-    EXCLUDE_FROM_ALL YES
-    SYSTEM YES
+  NAME doctest
+  GITHUB_REPOSITORY doctest/doctest
+  GIT_TAG 2d0a9359a60c51affe2a9bebb1be1dca47868151
+  EXCLUDE_FROM_ALL YES
+  SYSTEM YES
 )

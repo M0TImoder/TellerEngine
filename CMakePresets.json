@@ -89,11 +89,29 @@
     }
   ],
   "buildPresets": [
-    { "name": "Linux-debug",     "configurePreset": "Linux-debug" },
-    { "name": "Linux-release",   "configurePreset": "Linux-release" },
-    { "name": "Windows-debug",   "configurePreset": "Windows-debug" },
-    { "name": "Windows-release", "configurePreset": "Windows-release" },
-    { "name": "Wasm-debug",      "configurePreset": "Wasm-debug" },
-    { "name": "Wasm-release",    "configurePreset": "Wasm-release" }
+    {
+      "name": "Linux-debug",
+      "configurePreset": "Linux-debug"
+    },
+    {
+      "name": "Linux-release",
+      "configurePreset": "Linux-release"
+    },
+    {
+      "name": "Windows-debug",
+      "configurePreset": "Windows-debug"
+    },
+    {
+      "name": "Windows-release",
+      "configurePreset": "Windows-release"
+    },
+    {
+      "name": "Wasm-debug",
+      "configurePreset": "Wasm-debug"
+    },
+    {
+      "name": "Wasm-release",
+      "configurePreset": "Wasm-release"
+    }
   ]
 }
