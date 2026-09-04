@@ -20,6 +20,9 @@ if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
+# コンパイラ設定
+include(cmake/CompilerFlags.cmake)
+
 # 依存
 include(cmake/Dependencies.cmake)
 
@@ -34,6 +37,14 @@ target_include_directories(Teller INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
+target_link_libraries(Teller INTERFACE tl::expected)
+
 if(TELLER_ENABLE_DEBUG_UI)
   target_compile_definitions(Teller INTERFACE TELLER_DEBUG_UI)
+endif()
+
+# テスト
+if(TELLER_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
 endif()

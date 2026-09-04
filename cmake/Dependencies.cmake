@@ -11,6 +11,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
 CPMUsePackageLock(${PROJECT_SOURCE_DIR}/CPM.lock)
 
+# std::expectedが使えない環境向けの実体
+CPMGetPackage(tl-expected)
+
 # doctest
 if(TELLER_BUILD_TESTS)
   CPMGetPackage(doctest)
