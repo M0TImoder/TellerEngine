@@ -1,0 +1,46 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "テストを実行",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/Linux-debug/tests/TellerTests",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "gdbの整形表示を有効にする",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "ビルド (debug)"
+    },
+    {
+      "name": "テストを1件だけ実行",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/Linux-debug/tests/TellerTests",
+      "args": ["--test-case=${input:testCase}"],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "gdbの整形表示を有効にする",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "ビルド (debug)"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "testCase",
+      "type": "promptString",
+      "description": "実行するテストケース名"
+    }
+  ]
+}

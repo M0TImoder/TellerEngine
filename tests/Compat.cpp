@@ -1,4 +1,4 @@
-#include <Teller/Compat.h>
+#include <Teller/Compat.hpp>
 
 #include <doctest/doctest.h>
 

@@ -1,0 +1,18 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Teller",
+      "includePath": [
+        "${workspaceFolder}/src",
+        "${env:CPM_SOURCE_CACHE}/**",
+        "${env:HOME}/.cache/CPM/**"
+      ],
+      "compilerPath": "/usr/bin/g++",
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "linux-gcc-x64",
+      "compileCommands": "${workspaceFolder}/build/Linux-debug/compile_commands.json"
+    }
+  ]
+}

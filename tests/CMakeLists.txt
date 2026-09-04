@@ -1,7 +1,8 @@
 # 全ヘッダをincludeするだけのTUを生成
 file(GLOB_RECURSE teller_headers CONFIGURE_DEPENDS
-  ${PROJECT_SOURCE_DIR}/src/Teller/*.h
-  ${PROJECT_SOURCE_DIR}/src/Vanilla/*.h
+  ${PROJECT_SOURCE_DIR}/src/Teller/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/Vanilla/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/Extract/*.hpp
 )
 
 set(all_headers "")
@@ -16,6 +17,8 @@ file(WRITE ${all_headers_path} "${all_headers}")
 add_executable(TellerTests
   Main.cpp
   Compat.cpp
+  DataBytes.cpp
+  ExtractChunks.cpp
   ${all_headers_path}
 )
 

@@ -1,0 +1,79 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "セットアップ",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Setup.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "ビルド (debug)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Build.sh",
+      "args": ["-D"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "ビルド (release)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Build.sh",
+      "args": ["-R"],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "ビルド (wasm)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Build.sh",
+      "args": ["-W"],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "ビルドし直す (debug)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Build.sh",
+      "args": ["-D", "-C"],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "テスト",
+      "type": "shell",
+      "command": "ctest",
+      "args": [
+        "--test-dir",
+        "${workspaceFolder}/build/Linux-debug",
+        "--output-on-failure"
+      ],
+      "dependsOn": "ビルド (debug)",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "最新にする",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/Update.sh",
+      "problemMatcher": []
+    },
+    {
+      "label": "整形 (clang-format)",
+      "type": "shell",
+      "command": "clang-format",
+      "args": [
+        "-i",
+        "--style=file",
+        "${file}"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
