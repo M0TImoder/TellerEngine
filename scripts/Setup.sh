@@ -439,7 +439,7 @@ main() {
   select_actions
   print_scan_result
   execute_selected || true
-  wait_key "$(msg press_key)"
+  close_soon 5
 }
 
 main "$@"

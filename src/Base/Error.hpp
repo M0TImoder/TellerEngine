@@ -1,11 +1,10 @@
 #pragma once
 
 // データ層の失敗を報告する
-// メッセージは事実の報告に留める
 
 #include <string>
 
-namespace Teller::Data {
+namespace TellerEngine::Base {
 
 enum class ErrorCode {
     NotFound,
@@ -33,4 +32,4 @@ inline const char *ToString(ErrorCode code) {
     return "Unknown";
 }
 
-} // namespace Teller::Data
+} // namespace TellerEngineEngine::Base::Data

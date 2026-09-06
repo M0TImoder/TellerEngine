@@ -67,7 +67,7 @@ main() {
   printf '%s\n' "$(msg pulling)"
   if ! ( cd "$TELLER_ROOT" && run_step "git pull --ff-only" ); then
     printf '%s%s%s\n' "$C_NG" "$(msg failed)" "$C_RESET" >&2
-    wait_key "$(msg press_key)"
+    close_soon 30
     exit 1
   fi
 
@@ -85,12 +85,13 @@ main() {
     printf '\n%s: %s\n' "$(msg building)" "$preset"
     if ! ( cd "$TELLER_ROOT" && run_step "cmake --build --preset $preset" ); then
       printf '%s%s: %s%s\n' "$C_NG" "$(msg failed)" "$preset" "$C_RESET" >&2
-      wait_key "$(msg press_key)"
+      close_soon 30
       exit 1
     fi
   done
 
   printf '\n%s%s%s\n' "$C_OK" "$(msg done)" "$C_RESET"
+  close_soon 5
 }
 
 main "$@"

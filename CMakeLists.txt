@@ -27,21 +27,29 @@ include(cmake/CompilerFlags.cmake)
 include(cmake/Dependencies.cmake)
 
 # ライブラリ本体
-add_library(Teller INTERFACE)
-add_library(Teller::Teller ALIAS Teller)
+add_library(TellerEngine INTERFACE)
+add_library(TellerEngine::TellerEngine ALIAS TellerEngine)
 
-target_compile_features(Teller INTERFACE cxx_std_20)
+target_compile_features(TellerEngine INTERFACE cxx_std_20)
 
 # インクルード
-target_include_directories(Teller INTERFACE
+target_include_directories(TellerEngine INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
-target_link_libraries(Teller INTERFACE tl::expected)
+target_link_libraries(TellerEngine INTERFACE tl::expected)
 
 if(TELLER_ENABLE_DEBUG_UI)
-  target_compile_definitions(Teller INTERFACE TELLER_DEBUG_UI)
+  target_compile_definitions(TellerEngine INTERFACE TELLER_DEBUG_UI)
 endif()
+
+# 抽出ツール
+add_executable(TellerExtract
+  src/Extract/Main.cpp
+  src/Extract/Image.cpp
+  src/Extract/Writer.cpp
+)
+target_link_libraries(TellerExtract PRIVATE TellerEngine::TellerEngine stb::stb)
 
 # テスト
 if(TELLER_BUILD_TESTS)

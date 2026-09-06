@@ -1,7 +1,8 @@
 # 全ヘッダをincludeするだけのTUを生成
 file(GLOB_RECURSE teller_headers CONFIGURE_DEPENDS
-  ${PROJECT_SOURCE_DIR}/src/Teller/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/Base/*.hpp
   ${PROJECT_SOURCE_DIR}/src/Vanilla/*.hpp
+  ${PROJECT_SOURCE_DIR}/src/Teller/*.hpp
   ${PROJECT_SOURCE_DIR}/src/Extract/*.hpp
 )
 
@@ -14,14 +15,26 @@ endforeach()
 set(all_headers_path ${CMAKE_CURRENT_BINARY_DIR}/AllHeaders.cpp)
 file(WRITE ${all_headers_path} "${all_headers}")
 
+# stbの実装が入る翻訳単位
+add_library(TellerExtractImage STATIC ${PROJECT_SOURCE_DIR}/src/Extract/Image.cpp
+                                   ${PROJECT_SOURCE_DIR}/src/Extract/Writer.cpp)
+target_link_libraries(TellerExtractImage PUBLIC TellerEngine::TellerEngine stb::stb)
+
 add_executable(TellerTests
   Main.cpp
   Compat.cpp
   DataBytes.cpp
+  ExtractChunkReaders.cpp
   ExtractChunks.cpp
+  ExtractGameData.cpp
+  ExtractGeneral.cpp
+  ExtractSprites.cpp
+  ExtractStrings.cpp
+  ExtractTextures.cpp
   ${all_headers_path}
 )
 
-target_link_libraries(TellerTests PRIVATE Teller::Teller doctest::doctest TellerWarnings)
+target_link_libraries(TellerTests PRIVATE TellerEngine::TellerEngine doctest::doctest
+                                    TellerExtractImage TellerWarnings)
 
 add_test(NAME TellerTests COMMAND TellerTests)

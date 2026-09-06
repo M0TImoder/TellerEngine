@@ -1,4 +1,4 @@
-#include <Teller/Data/FileBytes.hpp>
+#include <Extract/FileBytes.hpp>
 
 #include <doctest/doctest.h>
 
@@ -23,7 +23,7 @@ std::filesystem::path MakeSample(const std::string &contents) {
 
 TEST_CASE("FileBytesは範囲を指定して読める") {
     const auto directory = MakeSample("0123456789");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
     CHECK(bytes.Has("sample.bin"));
 
@@ -44,17 +44,17 @@ TEST_CASE("FileBytesは範囲を指定して読める") {
 
 TEST_CASE("FileBytesは失敗を種別と文脈で返す") {
     const auto directory = MakeSample("0123456789");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
     CHECK_FALSE(bytes.Has("missing.bin"));
 
     const auto missing = bytes.ReadAll("missing.bin");
     REQUIRE_FALSE(missing.has_value());
-    CHECK(missing.error().code == Teller::Data::ErrorCode::NotFound);
+    CHECK(missing.error().code == TellerEngine::Base::ErrorCode::NotFound);
     CHECK(missing.error().context.find("missing.bin") != std::string::npos);
 
     const auto beyond = bytes.Read("sample.bin", 8, 5);
     REQUIRE_FALSE(beyond.has_value());
-    CHECK(beyond.error().code == Teller::Data::ErrorCode::OutOfRange);
+    CHECK(beyond.error().code == TellerEngine::Base::ErrorCode::OutOfRange);
     CHECK(beyond.error().context.find("total=10") != std::string::npos);
 }

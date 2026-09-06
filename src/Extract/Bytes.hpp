@@ -1,11 +1,9 @@
 #pragma once
 
 // 名前付きのバイト列を供給する口
-// エンジンは既定の場所を持たない
-// ばらのファイルでも、Modのディレクトリでも、WASMのプリロードFSでも、同じ口に刺さる
 
-#include <Teller/Compat.hpp>
-#include <Teller/Data/Error.hpp>
+#include <Base/Compat.hpp>
+#include <Base/Error.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -13,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace Teller::Data {
+namespace TellerEngine::Extract {
 
 using ByteBuffer = std::vector<std::byte>;
 
@@ -23,21 +21,21 @@ public:
 
     virtual bool Has(std::string_view name) const = 0;
 
-    virtual Expected<std::uint64_t, Error>
+    virtual Expected<std::uint64_t, Base::Error>
     SizeOf(std::string_view name) const = 0;
 
-    virtual Expected<ByteBuffer, Error> Read(std::string_view name,
+    virtual Expected<ByteBuffer, Base::Error> Read(std::string_view name,
                                              std::uint64_t offset,
                                              std::uint64_t size) const = 0;
 
     // 全体を読む
-    virtual Expected<ByteBuffer, Error> ReadAll(std::string_view name) const {
+    virtual Expected<ByteBuffer, Base::Error> ReadAll(std::string_view name) const {
         auto size = SizeOf(name);
         if (!size) {
-            return Unexpected<Error>(size.error());
+            return Unexpected<Base::Error>(size.error());
         }
         return Read(name, 0, *size);
     }
 };
 
-} // namespace Teller::Data
+} // namespace TellerEngineEngine::Base::Data

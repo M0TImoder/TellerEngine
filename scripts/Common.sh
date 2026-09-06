@@ -85,6 +85,79 @@ wait_key() {
   printf '\n'
 }
 
+# 1つだけ選ばせる
+choose() {
+  local -n picked_out=$1
+  local title="$2"
+  shift 2
+  local options=("$@")
+  local cursor=0
+  local last=$(( ${#options[@]} - 1 ))
+
+  if [[ ! -t 0 || ! -t 1 ]]; then
+    picked_out=0
+    return 0
+  fi
+
+  trap 'tput cnorm 2>/dev/null || true; printf "\033[?1049l"' EXIT INT TERM
+  printf '\033[?1049h'
+  tput civis 2>/dev/null || true
+
+  local key rest index pointer cols width sep
+  while true; do
+    cols="$(term_cols)"
+    width=$(widest "$title" "${options[@]}")
+    width=$(( width + 4 ))
+    (( width > cols )) && width=$cols
+    sep="$(make_sep "$width")"
+
+    printf '\033[H'
+    printf '%s\033[K\n' "$(clip "$title" "$width")"
+    printf '%s\033[K\n' "$sep"
+    for index in "${!options[@]}"; do
+      if (( cursor == index )); then pointer="${C_SEL}>${C_RESET}"; else pointer=" "; fi
+      printf ' %s %s\033[K\n' "$pointer" "$(clip "${options[index]}" $(( width - 3 )))"
+    done
+    printf '%s\033[K\n' "$sep"
+    printf '%s%s%s\033[K\n' "$C_DIM" "↑↓ 移動   Enter 決定   q 中止" "$C_RESET"
+    printf '\033[J'
+
+    IFS= read -rsn1 key || key=""
+    if [[ "$key" == $'\033' ]]; then
+      read -rsn2 -t 0.05 rest || rest=""
+      key="$key$rest"
+    fi
+    case "$key" in
+      $'\033[A') (( cursor > 0 )) && cursor=$(( cursor - 1 )) ;;
+      $'\033[B') (( cursor < last )) && cursor=$(( cursor + 1 )) ;;
+      '') break ;;
+      q|Q|$'\033') cursor=-1; break ;;
+    esac
+  done
+
+  tput cnorm 2>/dev/null || true
+  printf '\033[?1049l'
+  trap - EXIT INT TERM
+  picked_out=$cursor
+}
+
+# 何秒か待ってから自動で閉じる
+# キーを押せば即座に閉じる
+close_soon() {
+  local left="${1:-5}"
+  [[ -t 0 && -t 1 ]] || return 0
+
+  while (( left > 0 )); do
+    printf '\r%s%d秒後に自動で閉じます... (何かキーを押すと即座に閉じる)%s\033[K' \
+      "$C_DIM" "$left" "$C_RESET"
+    if IFS= read -rsn1 -t 1 _; then
+      break
+    fi
+    left=$(( left - 1 ))
+  done
+  printf '\r\033[K'
+}
+
 # ホストのプリセット接頭辞
 host_prefix() {
   case "$(uname -s)" in

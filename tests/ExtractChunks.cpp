@@ -1,5 +1,5 @@
 #include <Extract/Chunks.hpp>
-#include <Teller/Data/FileBytes.hpp>
+#include <Extract/FileBytes.hpp>
 
 #include <doctest/doctest.h>
 
@@ -51,9 +51,9 @@ TEST_CASE("FORMを走査してチャンクの位置と大きさを取れる") {
     const auto form =
         MakeForm({{"GEN8", "abcd"}, {"STRG", "efghij"}, {"TXTR", ""}});
     const auto directory = WriteSample(form, "good.win");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
-    const auto table = Teller::Extract::ReadChunkTable(bytes, "good.win");
+    const auto table = TellerEngine::Extract::ReadChunkTable(bytes, "good.win");
     REQUIRE(table.has_value());
     REQUIRE(table->chunks.size() == 3);
 
@@ -79,11 +79,11 @@ TEST_CASE("FORMで始まらないファイルは拒否する") {
     bad += "abcd";
 
     const auto directory = WriteSample(bad, "bad.win");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
-    const auto table = Teller::Extract::ReadChunkTable(bytes, "bad.win");
+    const auto table = TellerEngine::Extract::ReadChunkTable(bytes, "bad.win");
     REQUIRE_FALSE(table.has_value());
-    CHECK(table.error().code == Teller::Data::ErrorCode::Malformed);
+    CHECK(table.error().code == TellerEngine::Base::ErrorCode::Malformed);
     CHECK(table.error().context.find("FORM") != std::string::npos);
 }
 
@@ -91,11 +91,11 @@ TEST_CASE("FORMの大きさがファイルと合わなければ拒否する") {
     auto form = MakeForm({{"GEN8", "abcd"}});
     form.push_back('\0');
     const auto directory = WriteSample(form, "short.win");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
-    const auto table = Teller::Extract::ReadChunkTable(bytes, "short.win");
+    const auto table = TellerEngine::Extract::ReadChunkTable(bytes, "short.win");
     REQUIRE_FALSE(table.has_value());
-    CHECK(table.error().code == Teller::Data::ErrorCode::Malformed);
+    CHECK(table.error().code == TellerEngine::Base::ErrorCode::Malformed);
     CHECK(table.error().context.find("does not match file size") !=
           std::string::npos);
 }
@@ -111,9 +111,9 @@ TEST_CASE("FORMの外へはみ出すチャンクは拒否する") {
     form += body;
 
     const auto directory = WriteSample(form, "over.win");
-    const Teller::Data::FileBytes bytes(directory);
+    const TellerEngine::Extract::FileBytes bytes(directory);
 
-    const auto table = Teller::Extract::ReadChunkTable(bytes, "over.win");
+    const auto table = TellerEngine::Extract::ReadChunkTable(bytes, "over.win");
     REQUIRE_FALSE(table.has_value());
     CHECK(table.error().context.find("runs past the end") != std::string::npos);
 }

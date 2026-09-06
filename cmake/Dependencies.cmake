@@ -14,6 +14,14 @@ CPMUsePackageLock(${PROJECT_SOURCE_DIR}/CPM.lock)
 # std::expectedが使えない環境向けの実体
 CPMGetPackage(tl-expected)
 
+# stb
+CPMGetPackage(stb)
+if(stb_ADDED)
+  add_library(stb INTERFACE)
+  add_library(stb::stb ALIAS stb)
+  target_include_directories(stb SYSTEM INTERFACE ${stb_SOURCE_DIR})
+endif()
+
 # doctest
 if(TELLER_BUILD_TESTS)
   CPMGetPackage(doctest)

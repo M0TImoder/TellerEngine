@@ -146,6 +146,7 @@ main() {
   fi
 
   printf '\n%s%s%s\n' "$C_OK" "$(msg done)" "$C_RESET"
+  close_soon 3
 }
 
 main "$@"

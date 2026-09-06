@@ -13,7 +13,7 @@
 #include <tl/expected.hpp>
 #endif
 
-namespace Teller {
+namespace TellerEngine {
 
 #if defined(__cpp_lib_expected)
 
@@ -32,4 +32,4 @@ template <typename E> using Unexpected = tl::unexpected<E>;
 template <typename T, std::size_t Extent = std::dynamic_extent>
 using Span = std::span<T, Extent>;
 
-} // namespace Teller
+} // namespace TellerEngine
