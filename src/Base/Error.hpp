@@ -32,4 +32,4 @@ inline const char *ToString(ErrorCode code) {
     return "Unknown";
 }
 
-} // namespace TellerEngineEngine::Base::Data
+} // namespace TellerEngine::Base

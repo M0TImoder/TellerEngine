@@ -22,6 +22,20 @@ target_link_libraries(TellerExtractImage PUBLIC TellerEngine::TellerEngine stb::
 
 add_executable(TellerTests
   Main.cpp
+  BaseActivation.cpp
+  BaseContext.cpp
+  BaseDepth.cpp
+  BaseGameObject.cpp
+  BaseGlobals.cpp
+  BaseInstances.cpp
+  BaseLoop.cpp
+  BaseMath.cpp
+  BaseRandom.cpp
+  BaseScheduler.cpp
+  BaseState.cpp
+  BaseVariableCheck.cpp
+  BaseVariables.cpp
+  BaseWith.cpp
   Compat.cpp
   DataBytes.cpp
   ExtractChunkReaders.cpp
