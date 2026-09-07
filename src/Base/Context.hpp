@@ -2,6 +2,7 @@
 
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
+#include <Base/Input.hpp>
 #include <Base/Instances.hpp>
 #include <Base/Loop.hpp>
 #include <Base/Random.hpp>
@@ -14,8 +15,9 @@ namespace TellerEngine::Base {
 // インスタンスの一覧とグローバルと乱数への入り口になる
 class Context {
 public:
-    Context(Instances &instances, Globals &globals, Random &random, const VirtualClock &clock)
-        : instances(instances), globals(globals), random(random), clock(clock) {}
+    Context(Instances &instances, Globals &globals, Random &random, const VirtualClock &clock,
+            const Input &input)
+        : instances(instances), globals(globals), random(random), clock(clock), input(input) {}
 
     Context(const Context &) = delete;
     Context &operator=(const Context &) = delete;
@@ -26,6 +28,8 @@ public:
 
     // 本家のcurrent_timeにあたる
     const VirtualClock &clock;
+
+    const Input &input;
 
     // 宣言した型と合わなければnullptr
     template <typename T> T *Global() { return dynamic_cast<T *>(&globals); }

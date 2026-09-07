@@ -2,6 +2,7 @@
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
 #include <Base/Instances.hpp>
+#include <Base/Input.hpp>
 #include <Base/Loop.hpp>
 #include <Base/Random.hpp>
 #include <Base/Scheduler.hpp>
@@ -152,7 +153,8 @@ TEST_CASE("回している最中に論理レートが変わっても刻み幅が
     Base::Globals globals;
     Base::Random random;
     Base::LoopCycle cycle;
-    Base::Context context{instances, globals, random, cycle.Clock()};
+    Base::Input input;
+    Base::Context context{instances, globals, random, cycle.Clock(), input};
     Base::Scheduler scheduler;
 
     RateChanger *changer =
@@ -177,7 +179,8 @@ TEST_CASE("ゲームコードは仮想クロックだけを読む") {
     Base::Globals globals;
     Base::Random random;
     Base::LoopCycle cycle;
-    Base::Context context{instances, globals, random, cycle.Clock()};
+    Base::Input input;
+    Base::Context context{instances, globals, random, cycle.Clock(), input};
     Base::Scheduler scheduler;
 
     context.Create<ClockReader>();

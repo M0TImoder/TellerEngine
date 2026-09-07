@@ -25,8 +25,10 @@ add_executable(TellerTests
   BaseActivation.cpp
   BaseContext.cpp
   BaseDepth.cpp
+  BaseFiles.cpp
   BaseGameObject.cpp
   BaseGlobals.cpp
+  BaseInput.cpp
   BaseInstances.cpp
   BaseLoop.cpp
   BaseMath.cpp
@@ -45,10 +47,18 @@ add_executable(TellerTests
   ExtractSprites.cpp
   ExtractStrings.cpp
   ExtractTextures.cpp
+  PlatformGamepad.cpp
+  PlatformLoop.cpp
+  PlatformSingleThread.cpp
+  PlatformStorage.cpp
+  PlatformSystem.cpp
   ${all_headers_path}
 )
 
-target_link_libraries(TellerTests PRIVATE TellerEngine::TellerEngine doctest::doctest
-                                    TellerExtractImage TellerWarnings)
+target_link_libraries(TellerTests PRIVATE TellerEngine::TellerEngine TellerEngine::Platform
+                                    doctest::doctest TellerExtractImage TellerWarnings)
+
+target_compile_definitions(TellerTests PRIVATE
+  TELLER_SOURCE_DIR="${PROJECT_SOURCE_DIR}/src")
 
 add_test(NAME TellerTests COMMAND TellerTests)

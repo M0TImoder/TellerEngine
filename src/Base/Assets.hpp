@@ -6,10 +6,10 @@
 #include <Base/AssetLocation.hpp>
 #include <Base/Compat.hpp>
 #include <Base/Error.hpp>
+#include <Base/Files.hpp>
 
 #include <cstddef>
 #include <filesystem>
-#include <fstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -38,37 +38,12 @@ public:
         return directory / (std::to_string(frame) + ".png");
     }
 
-    virtual bool Has(AssetLocation location) const {
-        std::error_code ignored;
-        const auto path = PathOf(location);
-        return std::filesystem::exists(path, ignored);
-    }
+    virtual bool Has(AssetLocation location) const { return Files::Exists(PathOf(location)); }
 
     // 生のパスを書かせないための内部用
     virtual Expected<std::vector<std::byte>, Error>
     Read(const std::filesystem::path &path) const {
-        std::error_code failure;
-        const auto size = std::filesystem::file_size(path, failure);
-        if (failure) {
-            return Unexpected<Error>(Error{ErrorCode::NotFound, path.string()});
-        }
-
-        std::ifstream stream(path, std::ios::binary);
-        if (!stream) {
-            return Unexpected<Error>(
-                Error{ErrorCode::ReadFailed, path.string()});
-        }
-
-        std::vector<std::byte> buffer(static_cast<std::size_t>(size));
-        if (size > 0) {
-            stream.read(reinterpret_cast<char *>(buffer.data()),
-                        static_cast<std::streamsize>(size));
-            if (!stream) {
-                return Unexpected<Error>(
-                    Error{ErrorCode::ReadFailed, path.string()});
-            }
-        }
-        return buffer;
+        return Files::ReadBytes(path);
     }
 };
 

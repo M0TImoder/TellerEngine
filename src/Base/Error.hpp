@@ -11,6 +11,7 @@ enum class ErrorCode {
     OutOfRange,
     ReadFailed,
     Malformed,
+    Unavailable,
 };
 
 struct Error {
@@ -28,6 +29,8 @@ inline const char *ToString(ErrorCode code) {
         return "ReadFailed";
     case ErrorCode::Malformed:
         return "Malformed";
+    case ErrorCode::Unavailable:
+        return "Unavailable";
     }
     return "Unknown";
 }

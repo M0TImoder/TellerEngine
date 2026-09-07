@@ -22,6 +22,11 @@ if(stb_ADDED)
   target_include_directories(stb SYSTEM INTERFACE ${stb_SOURCE_DIR})
 endif()
 
+# ウィンドウ・入力・ゲームパッド
+if(TELLER_ENABLE_PLATFORM)
+  CPMGetPackage(SDL3)
+endif()
+
 # doctest
 if(TELLER_BUILD_TESTS)
   CPMGetPackage(doctest)

@@ -14,6 +14,7 @@ endif()
 
 option(TELLER_BUILD_TESTS "テストをビルドする" ${PROJECT_IS_TOP_LEVEL})
 option(TELLER_ENABLE_DEBUG_UI "デバッグUIを組み込む" ${TELLER_DEBUG_UI_DEFAULT})
+option(TELLER_ENABLE_PLATFORM "プラットフォーム層を組み込む" ON)
 
 if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_CXX_EXTENSIONS OFF)
@@ -25,6 +26,17 @@ include(cmake/CompilerFlags.cmake)
 
 # 依存
 include(cmake/Dependencies.cmake)
+
+# WASMのループ
+include(cmake/Asyncify.cmake)
+
+# 単一スレッドで組む
+if(EMSCRIPTEN)
+  string(FIND "${CMAKE_CXX_FLAGS}" "-pthread" teller_pthread_flag)
+  if(NOT teller_pthread_flag EQUAL -1)
+    message(FATAL_ERROR "単一スレッドで組む必要があります (-pthread が指定されています)")
+  endif()
+endif()
 
 # ライブラリ本体
 add_library(TellerEngine INTERFACE)
@@ -41,6 +53,14 @@ target_link_libraries(TellerEngine INTERFACE tl::expected)
 
 if(TELLER_ENABLE_DEBUG_UI)
   target_compile_definitions(TellerEngine INTERFACE TELLER_DEBUG_UI)
+endif()
+
+# プラットフォーム層
+# 本体と分けてあるので、窓を開けない使い方ではSDL3を引き込まない
+if(TELLER_ENABLE_PLATFORM)
+  add_library(TellerEnginePlatform INTERFACE)
+  add_library(TellerEngine::Platform ALIAS TellerEnginePlatform)
+  target_link_libraries(TellerEnginePlatform INTERFACE TellerEngine::TellerEngine SDL3::SDL3)
 endif()
 
 # 抽出ツール

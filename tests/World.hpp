@@ -4,6 +4,7 @@
 
 #include <Base/Context.hpp>
 #include <Base/Globals.hpp>
+#include <Base/Input.hpp>
 #include <Base/Instances.hpp>
 #include <Base/Loop.hpp>
 #include <Base/Random.hpp>
@@ -15,7 +16,8 @@ struct World {
     TellerEngine::Base::Globals globals;
     TellerEngine::Base::Random random;
     TellerEngine::Base::LoopCycle cycle;
-    TellerEngine::Base::Context context{instances, globals, random, cycle.Clock()};
+    TellerEngine::Base::Input input;
+    TellerEngine::Base::Context context{instances, globals, random, cycle.Clock(), input};
 };
 
 } // namespace TellerTest

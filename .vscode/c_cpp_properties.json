@@ -4,9 +4,7 @@
     {
       "name": "Teller",
       "includePath": [
-        "${workspaceFolder}/src",
-        "${env:CPM_SOURCE_CACHE}/**",
-        "${env:HOME}/.cache/CPM/**"
+        "${workspaceFolder}/src"
       ],
       "compilerPath": "/usr/bin/g++",
       "cStandard": "c17",

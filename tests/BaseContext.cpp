@@ -80,7 +80,8 @@ struct World {
     StoryGlobals globals;
     Base::Random random;
     Base::LoopCycle cycle;
-    Base::Context context{instances, globals, random, cycle.Clock()};
+    Base::Input input;
+    Base::Context context{instances, globals, random, cycle.Clock(), input};
     Base::Scheduler scheduler;
 };
 
@@ -159,8 +160,9 @@ TEST_CASE("同じ一覧の上で別のグローバルを並べられる") {
     StoryGlobals second;
     Base::Random random;
     Base::LoopCycle cycle;
-    Base::Context left{instances, first, random, cycle.Clock()};
-    Base::Context right{instances, second, random, cycle.Clock()};
+    Base::Input input;
+    Base::Context left{instances, first, random, cycle.Clock(), input};
+    Base::Context right{instances, second, random, cycle.Clock(), input};
 
     left.Global<StoryGlobals>()->plot = 1;
     right.Global<StoryGlobals>()->plot = 2;

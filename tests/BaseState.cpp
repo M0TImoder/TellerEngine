@@ -2,6 +2,7 @@
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
 #include <Base/Instances.hpp>
+#include <Base/Input.hpp>
 #include <Base/Loop.hpp>
 #include <Base/Random.hpp>
 #include <Base/Scheduler.hpp>
@@ -63,7 +64,8 @@ struct World {
     StoryGlobals globals;
     Base::Random random{12345};
     Base::LoopCycle cycle;
-    Base::Context context{instances, globals, random, cycle.Clock()};
+    Base::Input input;
+    Base::Context context{instances, globals, random, cycle.Clock(), input};
     Base::Scheduler scheduler;
 
     void Run(int frames) {
@@ -74,11 +76,11 @@ struct World {
     }
 
     Base::StateSnapshot<StoryGlobals> Save() {
-        return Base::SaveState(instances, globals, random, cycle, scheduler);
+        return Base::SaveState(instances, globals, random, cycle, input, scheduler);
     }
 
     void Restore(const Base::StateSnapshot<StoryGlobals> &snapshot) {
-        Base::RestoreState(snapshot, instances, globals, random, cycle, scheduler);
+        Base::RestoreState(snapshot, instances, globals, random, cycle, input, scheduler);
     }
 
     std::vector<std::int64_t> Lives() {
