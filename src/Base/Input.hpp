@@ -35,7 +35,7 @@ public:
         return (current_ & Bit(button)) == 0 && (previous_ & Bit(button)) != 0;
     }
 
-    // 今の状態を過去へ送る
+    // 論理ステップの頭で1度だけ呼ぶ
     constexpr void BeginFrame() { previous_ = current_; }
 
     constexpr void Set(Button button, bool down) {

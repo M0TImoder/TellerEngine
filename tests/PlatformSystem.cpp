@@ -57,6 +57,7 @@ TEST_CASE("キーのイベントが入力へ反映される") {
     down.key.repeat = false;
     SDL_PushEvent(&down);
 
+    input.BeginFrame();
     CHECK(devices.Pump(input));
     CHECK(input.Held(Base::Button::Confirm));
     CHECK(input.Pressed(Base::Button::Confirm));
@@ -66,6 +67,7 @@ TEST_CASE("キーのイベントが入力へ反映される") {
     up.key.scancode = SDL_SCANCODE_Z;
     SDL_PushEvent(&up);
 
+    input.BeginFrame();
     CHECK(devices.Pump(input));
     CHECK_FALSE(input.Held(Base::Button::Confirm));
     CHECK(input.Released(Base::Button::Confirm));
@@ -81,6 +83,7 @@ TEST_CASE("閉じる要求で偽が返る") {
     quit.type = SDL_EVENT_QUIT;
     SDL_PushEvent(&quit);
 
+    input.BeginFrame();
     CHECK_FALSE(devices.Pump(input));
 }
 

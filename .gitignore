@@ -2,3 +2,4 @@ ext/
 *.internal*
 build/
 CMakeUserPresets.json
+samples/

@@ -23,6 +23,7 @@ target_link_libraries(TellerExtractImage PUBLIC TellerEngine::TellerEngine stb::
 add_executable(TellerTests
   Main.cpp
   BaseActivation.cpp
+  BaseBoundary.cpp
   BaseContext.cpp
   BaseDepth.cpp
   BaseDraw.cpp

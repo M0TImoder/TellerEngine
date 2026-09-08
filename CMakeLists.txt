@@ -73,6 +73,11 @@ add_executable(TellerExtract
 )
 target_link_libraries(TellerExtract PRIVATE TellerEngine::TellerEngine stb::stb)
 
+# 見本
+if(TELLER_ENABLE_PLATFORM AND PROJECT_IS_TOP_LEVEL)
+  add_subdirectory(samples/Empty)
+endif()
+
 # テスト
 if(TELLER_BUILD_TESTS)
   enable_testing()

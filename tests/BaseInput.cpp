@@ -1,4 +1,11 @@
+#include <Base/Canvas.hpp>
+#include <Base/Context.hpp>
+#include <Base/GameObject.hpp>
 #include <Base/Input.hpp>
+#include <Base/Scheduler.hpp>
+#include <Base/Variables.hpp>
+
+#include "World.hpp"
 
 #include <doctest/doctest.h>
 
@@ -85,4 +92,74 @@ TEST_CASE("コンパイル時にも組み立てられる") {
     static_assert(input.Pressed(Base::Button::Down));
     static_assert(!input.Held(Base::Button::Up));
     CHECK(input.Held(Base::Button::Down));
+}
+
+TEST_CASE("表示が論理より速くても押し始めを取りこぼさない") {
+    TellerTest::World world;
+
+    struct Watcher : Base::GameObject {
+        int pressed = 0;
+        int held = 0;
+
+        void Step(Base::Context &context) override {
+            if (context.input.Pressed(Base::Button::Confirm)) {
+                pressed += 1;
+            }
+            if (context.input.Held(Base::Button::Confirm)) {
+                held += 1;
+            }
+        }
+
+        static constexpr auto Variables() { return Base::GameObject::Variables(); }
+    };
+
+    const Base::InstanceId id = world.context.Create<Watcher>();
+
+    // 表示2回につき論理1回、という刻みを真似る
+    const auto update = [&](bool down, bool step) {
+        world.input.Set(Base::Button::Confirm, down);
+        if (step) {
+            world.scheduler.Advance(world.context, world.canvas);
+        }
+    };
+
+    update(false, true);
+    update(false, false);
+    update(true, true);
+    update(true, false);
+    update(true, true);
+    update(true, false);
+
+    const Watcher *watcher = world.instances.Find<Watcher>(id);
+    REQUIRE(watcher != nullptr);
+    CHECK(watcher->pressed == 1);
+    CHECK(watcher->held == 2);
+}
+
+TEST_CASE("論理ステップの合間に押して離しても取りこぼさない") {
+    TellerTest::World world;
+
+    struct Watcher : Base::GameObject {
+        int pressed = 0;
+
+        void Step(Base::Context &context) override {
+            if (context.input.Pressed(Base::Button::Right)) {
+                pressed += 1;
+            }
+        }
+
+        static constexpr auto Variables() { return Base::GameObject::Variables(); }
+    };
+
+    const Base::InstanceId id = world.context.Create<Watcher>();
+
+    world.scheduler.Advance(world.context, world.canvas);
+    world.input.Set(Base::Button::Right, true);
+    world.scheduler.Advance(world.context, world.canvas);
+    world.input.Set(Base::Button::Right, false);
+    world.scheduler.Advance(world.context, world.canvas);
+    world.input.Set(Base::Button::Right, true);
+    world.scheduler.Advance(world.context, world.canvas);
+
+    CHECK(world.instances.Find<Watcher>(id)->pressed == 2);
 }

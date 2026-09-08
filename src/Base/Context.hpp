@@ -16,8 +16,9 @@ namespace TellerEngine::Base {
 class Context {
 public:
     Context(Instances &instances, Globals &globals, Random &random, const VirtualClock &clock,
-            const Input &input)
-        : instances(instances), globals(globals), random(random), clock(clock), input(input) {}
+            Input &input)
+        : instances(instances), globals(globals), random(random), clock(clock), input(input),
+          input_(&input) {}
 
     Context(const Context &) = delete;
     Context &operator=(const Context &) = delete;
@@ -29,6 +30,9 @@ public:
     const VirtualClock &clock;
 
     const Input &input;
+
+    // 論理ステップの終わりにスケジューラが呼ぶ
+    void AdvanceInput() { input_->BeginFrame(); }
 
     // 宣言した型と合わなければnullptr
     template <typename T> T *Global() { return dynamic_cast<T *>(&globals); }
@@ -51,6 +55,9 @@ public:
         object->Destroy(*this);
         instances.Destroy(id);
     }
+
+private:
+    Input *input_ = nullptr;
 };
 
 } // namespace TellerEngine::Base

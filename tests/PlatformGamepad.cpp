@@ -79,10 +79,12 @@ TEST_CASE("パッドのボタンが入力へ反映される") {
     Platform::Devices devices;
 
     PushButton(SDL_GAMEPAD_BUTTON_SOUTH, true);
+    input.BeginFrame();
     CHECK(devices.Pump(input));
     CHECK(input.Pressed(Base::Button::Confirm));
 
     PushButton(SDL_GAMEPAD_BUTTON_SOUTH, false);
+    input.BeginFrame();
     CHECK(devices.Pump(input));
     CHECK(input.Released(Base::Button::Confirm));
 }
@@ -95,15 +97,18 @@ TEST_CASE("スティックは遊びを超えると方向になる") {
     Platform::Devices devices;
 
     PushAxis(SDL_GAMEPAD_AXIS_LEFTX, 4000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK_FALSE(input.Held(Base::Button::Right));
 
     PushAxis(SDL_GAMEPAD_AXIS_LEFTX, 20000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Right));
     CHECK_FALSE(input.Held(Base::Button::Left));
 
     PushAxis(SDL_GAMEPAD_AXIS_LEFTX, -20000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Left));
     CHECK_FALSE(input.Held(Base::Button::Right));
@@ -117,10 +122,12 @@ TEST_CASE("縦のスティックは下向きが正") {
     Platform::Devices devices;
 
     PushAxis(SDL_GAMEPAD_AXIS_LEFTY, 20000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Down));
 
     PushAxis(SDL_GAMEPAD_AXIS_LEFTY, -20000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Up));
 }
@@ -135,6 +142,7 @@ TEST_CASE("遊びの幅を変えられる") {
 
     devices.SetDeadZone(2000);
     PushAxis(SDL_GAMEPAD_AXIS_LEFTX, 4000);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Right));
 }
@@ -152,11 +160,13 @@ TEST_CASE("キーボードとパッドはどちらでも同じボタンを押せ
     key.key.repeat = false;
     SDL_PushEvent(&key);
     PushButton(SDL_GAMEPAD_BUTTON_SOUTH, true);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Confirm));
 
     // 片方を離してももう片方が押されている間は立ったまま
     PushButton(SDL_GAMEPAD_BUTTON_SOUTH, false);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK(input.Held(Base::Button::Confirm));
 
@@ -164,6 +174,7 @@ TEST_CASE("キーボードとパッドはどちらでも同じボタンを押せ
     release.type = SDL_EVENT_KEY_UP;
     release.key.scancode = SDL_SCANCODE_Z;
     SDL_PushEvent(&release);
+    input.BeginFrame();
     devices.Pump(input);
     CHECK_FALSE(input.Held(Base::Button::Confirm));
 }

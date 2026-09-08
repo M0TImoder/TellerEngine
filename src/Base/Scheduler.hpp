@@ -37,6 +37,9 @@ public:
         });
 
         context.instances.Collect();
+
+        // 次のステップから見た「1つ前」を確定させる
+        context.AdvanceInput();
         frame_ += 1;
     }
 

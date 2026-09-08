@@ -58,8 +58,6 @@ public:
     // 溜まったイベントを捌く
     // 閉じる要求が来たらfalseを返す
     bool Pump(Input &input) {
-        input.BeginFrame();
-
         bool running = true;
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
