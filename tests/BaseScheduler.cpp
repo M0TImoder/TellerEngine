@@ -25,7 +25,7 @@ struct Tracer : Base::GameObject {
     void Alarm(Base::Context &) override { phaseLog.push_back(tag + ":Alarm"); }
     void Step(Base::Context &) override { phaseLog.push_back(tag + ":Step"); }
     void EndStep(Base::Context &) override { phaseLog.push_back(tag + ":EndStep"); }
-    void Draw(Base::Context &) override { phaseLog.push_back(tag + ":Draw"); }
+    void Draw(Base::Context &, Base::Canvas &) override { phaseLog.push_back(tag + ":Draw"); }
 
     static constexpr auto Variables() {
         return Base::Extend(Base::GameObject::Variables(),
@@ -92,7 +92,7 @@ TEST_CASE("フェーズの並びが決まっている") {
     Base::Scheduler scheduler;
     instances.Find<Tracer>(instances.Create<Tracer>())->tag = "a";
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(phaseLog == std::vector<std::string>{"a:BeginStep", "a:Alarm", "a:Step", "a:EndStep",
                                           "a:Draw"});
     CHECK(scheduler.Frame() == 1);
@@ -106,7 +106,7 @@ TEST_CASE("フェーズごとに全インスタンスを回してから次へ進
     instances.Find<Tracer>(instances.Create<Tracer>())->tag = "a";
     instances.Find<Tracer>(instances.Create<Tracer>())->tag = "b";
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(phaseLog == std::vector<std::string>{"a:BeginStep", "b:BeginStep", "a:Alarm", "b:Alarm",
                                           "a:Step", "b:Step", "a:EndStep", "b:EndStep",
                                           "a:Draw", "b:Draw"});
@@ -119,11 +119,11 @@ TEST_CASE("生まれたフレームはStep系のフェーズに一切入らな�
     Base::Scheduler scheduler;
     instances.Create<Spawner>();
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(phaseLog == std::vector<std::string>{"born:Draw"});
 
     phaseLog.clear();
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(phaseLog == std::vector<std::string>{"born:BeginStep", "born:Alarm", "born:Step",
                                           "born:EndStep", "born:Draw"});
 }
@@ -137,7 +137,7 @@ TEST_CASE("visibleでないインスタンスは描かれない") {
     tracer->tag = "a";
     tracer->visible = false;
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(phaseLog == std::vector<std::string>{"a:BeginStep", "a:Alarm", "a:Step", "a:EndStep"});
 }
 
@@ -149,8 +149,8 @@ TEST_CASE("衝突の解決はStepとEndStepの間に入る") {
     scheduler.SetCollisionResolver(&CountCollisions);
     instances.Create<Tracer>();
 
-    scheduler.Advance(world.context);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(resolved == 2);
 }
 
@@ -162,7 +162,7 @@ TEST_CASE("破棄したインスタンスは次のフレームで領域ごと消
     instances.Destroy(id);
 
     CHECK(instances.Count() == 0);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(instances.Find(id) == nullptr);
 }
 
@@ -172,22 +172,22 @@ TEST_CASE("タイマーは数え終わったときに1度だけ呼ぶ") {
     Base::Scheduler scheduler;
     Ticker *ticker = instances.Find<Ticker>(instances.Create<Ticker>());
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(ticker->shortFired == 0);
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(ticker->shortFired == 1);
     CHECK(ticker->longFired == 0);
 
-    scheduler.Advance(world.context);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(ticker->longFired == 0);
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(ticker->longFired == 1);
 
     for (int i = 0; i < 10; ++i) {
-        scheduler.Advance(world.context);
+        scheduler.Advance(world.context, world.canvas);
     }
     CHECK(ticker->shortFired == 1);
     CHECK(ticker->longFired == 1);
@@ -200,14 +200,14 @@ TEST_CASE("止まったタイマーは入れ直せば再び動く") {
     Ticker *ticker = instances.Find<Ticker>(instances.Create<Ticker>());
 
     for (int i = 0; i < 3; ++i) {
-        scheduler.Advance(world.context);
+        scheduler.Advance(world.context, world.canvas);
     }
     REQUIRE(ticker->shortFired == 1);
     CHECK(ticker->shortFuse.Value() == doctest::Approx(-1.0));
 
     ticker->shortFuse = 2.0;
-    scheduler.Advance(world.context);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(ticker->shortFired == 2);
 }
 

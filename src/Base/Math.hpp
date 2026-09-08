@@ -19,11 +19,6 @@ inline double Round(double value) {
     return std::fmod(floored, 2.0) == 0.0 ? floored : floored + 1.0;
 }
 
-inline double Sqr(double value) { return value * value; }
-
-// 符号は割られる側に従う
-inline double Mod(double value, double divisor) { return std::fmod(value, divisor); }
-
 inline double DegToRad(double degrees) { return degrees * kPi / 180.0; }
 
 inline double RadToDeg(double radians) { return radians * 180.0 / kPi; }

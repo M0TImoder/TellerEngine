@@ -4,7 +4,7 @@
 
 #include <Base/Compat.hpp>
 #include <Base/Error.hpp>
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Extract/Textures.hpp>
 
 #include <cstdint>

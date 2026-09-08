@@ -30,7 +30,7 @@ struct BackgroundTable {
 };
 
 inline Expected<BackgroundTable, TellerEngine::Base::Error>
-ReadBackgrounds(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadBackgrounds(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
                 const Chunk &chunk, const StringTable &strings,
                 const TextureRegionTable &regions) {
     const auto contents = ReadChunk(bytes, name, chunk);

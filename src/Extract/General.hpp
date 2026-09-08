@@ -4,7 +4,7 @@
 // 固定部128バイトのあとに、ルームの並び順が続く
 // 文字列はSTRGの本体を指すポインタとして入っている
 
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 #include <Extract/Chunks.hpp>
 #include <Extract/Reader.hpp>
@@ -59,7 +59,7 @@ struct GeneralInfo {
 };
 
 inline Expected<GeneralInfo, TellerEngine::Base::Error>
-ReadGeneralInfo(const TellerEngine::Extract::Bytes &bytes,
+ReadGeneralInfo(const TellerEngine::Extract::FileBytes &bytes,
                 std::string_view name, const Chunk &chunk,
                 const StringTable &strings) {
     if (chunk.size < GeneralFixedSize + 4) {

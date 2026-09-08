@@ -34,7 +34,7 @@ struct CodeTable {
 };
 
 inline Expected<CodeTable, TellerEngine::Base::Error>
-ReadCode(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadCode(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
          const Chunk &chunk, const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {
@@ -87,7 +87,7 @@ ReadCode(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
 
 inline Expected<TellerEngine::Extract::ByteBuffer,
                 TellerEngine::Base::Error>
-ReadBytecode(const TellerEngine::Extract::Bytes &bytes,
+ReadBytecode(const TellerEngine::Extract::FileBytes &bytes,
              std::string_view name, const CodeEntry &entry) {
     return bytes.Read(name, entry.bytecodeOffset, entry.length);
 }
@@ -108,7 +108,7 @@ struct VariableTable {
 };
 
 inline Expected<VariableTable, TellerEngine::Base::Error>
-ReadVariables(const TellerEngine::Extract::Bytes &bytes,
+ReadVariables(const TellerEngine::Extract::FileBytes &bytes,
               std::string_view name, const Chunk &chunk,
               const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);
@@ -171,7 +171,7 @@ struct FunctionTable {
 };
 
 inline Expected<FunctionTable, TellerEngine::Base::Error>
-ReadFunctions(const TellerEngine::Extract::Bytes &bytes,
+ReadFunctions(const TellerEngine::Extract::FileBytes &bytes,
               std::string_view name, const Chunk &chunk,
               const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);

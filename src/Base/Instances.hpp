@@ -40,7 +40,6 @@ public:
         T &object = static_cast<T &>(*slot.object);
 
         byId_.emplace(static_cast<std::uint32_t>(id), slots_.size());
-        byType_[slot.type].push_back(id);
         slots_.push_back(std::move(slot));
 
         ReportCoverage<T>(object);
@@ -48,7 +47,7 @@ public:
         return id;
     }
 
-    // 直ちに存在しなくなるが、領域はCollectまで残る
+    // 領域はCollectまで残る
     void Destroy(InstanceId id) {
         Slot *slot = FindSlot(id);
         if (slot == nullptr || !slot->alive) {
@@ -62,7 +61,6 @@ public:
         return slot != nullptr && slot->alive && slot->object->active;
     }
 
-    // 有効でなくなる
     // IDを指した直接の参照だけは残る
     void Deactivate(InstanceId id) {
         if (GameObject *object = Find(id)) {
@@ -162,23 +160,6 @@ public:
             }
             if (T *typed = dynamic_cast<T *>(slot.object.get())) {
                 fn(*typed);
-            }
-        }
-    }
-
-    // 生成したときの型が丁度Tのものだけを生成順に渡す
-    template <typename T, typename Fn> void WithExact(Fn &&fn) {
-        const TypeId type = TypeIdOf<T>();
-        const auto found = byType_.find(type);
-        if (found == byType_.end()) {
-            return;
-        }
-        const std::size_t count = found->second.size();
-        for (std::size_t i = 0; i < count; ++i) {
-            const InstanceId id = byType_.find(type)->second[i];
-            Slot *slot = FindSlot(id);
-            if (slot != nullptr && slot->alive && slot->object->active) {
-                fn(static_cast<T &>(*slot->object));
             }
         }
     }
@@ -290,22 +271,6 @@ public:
         return total;
     }
 
-    // 生成したときの型が丁度Tのものを数える
-    template <typename T> std::size_t CountExact() const {
-        const auto found = byType_.find(TypeIdOf<T>());
-        if (found == byType_.end()) {
-            return 0;
-        }
-        std::size_t total = 0;
-        for (const InstanceId id : found->second) {
-            const Slot *slot = FindSlot(id);
-            if (slot != nullptr && slot->alive && slot->object->active) {
-                total += 1;
-            }
-        }
-        return total;
-    }
-
     // 破棄済みの領域を捨てる
     void Collect() {
         std::vector<Slot> kept;
@@ -351,7 +316,6 @@ private:
     };
 
 public:
-    // 巻き戻しに必要な状態の全て
     class Snapshot {
     public:
         Snapshot() = default;
@@ -392,10 +356,8 @@ private:
 
     void Reindex() {
         byId_.clear();
-        byType_.clear();
         for (std::size_t i = 0; i < slots_.size(); ++i) {
             byId_.emplace(static_cast<std::uint32_t>(slots_[i].id), i);
-            byType_[slots_[i].type].push_back(slots_[i].id);
         }
     }
 
@@ -431,7 +393,6 @@ private:
     std::vector<Slot> slots_;
     std::vector<std::size_t> order_;
     std::unordered_map<std::uint32_t, std::size_t> byId_;
-    std::unordered_map<TypeId, std::vector<InstanceId>> byType_;
     std::uint32_t nextId_ = 1;
     CoverageHandler coverage_ = nullptr;
 };

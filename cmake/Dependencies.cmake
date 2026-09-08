@@ -22,6 +22,9 @@ if(stb_ADDED)
   target_include_directories(stb SYSTEM INTERFACE ${stb_SOURCE_DIR})
 endif()
 
+# 定義ファイル
+CPMGetPackage(tomlplusplus)
+
 # ウィンドウ・入力・ゲームパッド
 if(TELLER_ENABLE_PLATFORM)
   CPMGetPackage(SDL3)

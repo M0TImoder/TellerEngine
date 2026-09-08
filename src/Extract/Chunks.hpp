@@ -4,7 +4,7 @@
 // FORMは8バイトの見出しの並びで、中身の解釈はチャンクごとに異なる
 
 #include <Extract/Reader.hpp>
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 
 #include <cstdint>
@@ -42,7 +42,7 @@ inline TellerEngine::Base::Error Malformed(std::string context) {
 }
 
 inline Expected<ChunkTable, TellerEngine::Base::Error>
-ReadChunkTable(const TellerEngine::Extract::Bytes &bytes, std::string_view name) {
+ReadChunkTable(const TellerEngine::Extract::FileBytes &bytes, std::string_view name) {
     const auto total = bytes.SizeOf(name);
     if (!total) {
         return Unexpected<TellerEngine::Base::Error>(total.error());
@@ -105,7 +105,7 @@ ReadChunkTable(const TellerEngine::Extract::Bytes &bytes, std::string_view name)
 
 // チャンクの中身を丸ごと読む
 inline Expected<TellerEngine::Extract::ByteBuffer, TellerEngine::Base::Error>
-ReadChunk(const TellerEngine::Extract::Bytes &bytes, std::string_view name, const Chunk &chunk) {
+ReadChunk(const TellerEngine::Extract::FileBytes &bytes, std::string_view name, const Chunk &chunk) {
     return bytes.Read(name, chunk.offset, chunk.size);
 }
 

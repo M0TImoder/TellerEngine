@@ -28,7 +28,7 @@ public:
     std::filesystem::path PathOf(const std::string &name) const { return root_ / name; }
 
     // 使えるようにする
-    // WASMでは前回までの内容をここで読み込む
+    // WASMでは前回までの内容を読み込む
     Expected<void, Error> Mount() {
         const auto ready = Files::EnsureDirectory(root_);
         if (!ready) {

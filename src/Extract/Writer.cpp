@@ -171,7 +171,7 @@ WriteAssetHeader(const GameData &game,
 }
 
 Expected<WriteReport, Base::Error>
-WriteAssets(const Bytes &bytes, std::string_view dataName, const GameData &game,
+WriteAssets(const FileBytes &bytes, std::string_view dataName, const GameData &game,
             const std::filesystem::path &out, const WriteOptions &options) {
     WriteReport report;
 

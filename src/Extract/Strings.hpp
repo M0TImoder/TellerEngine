@@ -7,7 +7,7 @@
 
 #include <Extract/Chunks.hpp>
 #include <Extract/Reader.hpp>
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 
 #include <cstdint>
@@ -35,7 +35,7 @@ struct StringTable {
 };
 
 inline Expected<StringTable, TellerEngine::Base::Error>
-ReadStringTable(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadStringTable(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
                 const Chunk &chunk) {
     const auto contents = bytes.Read(name, chunk.offset, chunk.size);
     if (!contents) {

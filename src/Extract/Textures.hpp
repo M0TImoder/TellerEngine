@@ -5,7 +5,7 @@
 // 実体は u32の拡大フラグ / PNG本体へのポインタ
 // PNG本体の長さは記録されていないので、PNGのチャンクをIENDまで辿って求める
 
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 #include <Extract/Chunks.hpp>
 #include <Extract/Reader.hpp>
@@ -36,7 +36,7 @@ struct TextureTable {
 };
 
 inline Expected<TextureTable, TellerEngine::Base::Error>
-ReadTextureTable(const TellerEngine::Extract::Bytes &bytes,
+ReadTextureTable(const TellerEngine::Extract::FileBytes &bytes,
                  std::string_view name, const Chunk &chunk) {
     const std::uint64_t chunkEnd = chunk.offset + chunk.size;
 
@@ -131,7 +131,7 @@ ReadTextureTable(const TellerEngine::Extract::Bytes &bytes,
 
 inline Expected<TellerEngine::Extract::ByteBuffer,
                 TellerEngine::Base::Error>
-ReadTexturePng(const TellerEngine::Extract::Bytes &bytes,
+ReadTexturePng(const TellerEngine::Extract::FileBytes &bytes,
                std::string_view name, const TexturePage &page) {
     return bytes.Read(name, page.pngOffset, page.pngSize);
 }
@@ -174,7 +174,7 @@ struct TextureRegionTable {
 // pageCountはTXTRのページ数
 // 矩形が存在しないページを指していないかを確かめるために受け取る
 inline Expected<TextureRegionTable, TellerEngine::Base::Error>
-ReadTextureRegions(const TellerEngine::Extract::Bytes &bytes,
+ReadTextureRegions(const TellerEngine::Extract::FileBytes &bytes,
                    std::string_view name, const Chunk &chunk,
                    std::size_t pageCount) {
     const auto contents = bytes.Read(name, chunk.offset, chunk.size);

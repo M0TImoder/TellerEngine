@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Base/Canvas.hpp>
 #include <Base/Context.hpp>
 #include <Base/GameObject.hpp>
 #include <Base/Instances.hpp>
@@ -14,7 +15,7 @@ public:
     using CollisionResolver = void (*)(Context &context);
 
     // BeginStepからDrawまでを1回進める
-    void Advance(Context &context) {
+    void Advance(Context &context, Canvas &canvas) {
         const auto boundary = static_cast<std::uint32_t>(context.instances.NextId());
 
         RunPhase(context, boundary, &GameObject::BeginStep);
@@ -26,9 +27,12 @@ public:
         RunPhase(context, boundary, &GameObject::EndStep);
 
         // このフレームに生まれたものも描く
-        context.instances.ForEachByDepth([&context](GameObject &object) {
+        canvas.List().Clear();
+        context.instances.ForEachByDepth([&context, &canvas](GameObject &object) {
             if (object.visible) {
-                object.Draw(context);
+                canvas.Reset();
+                canvas.SetSource(object.id);
+                object.Draw(context, canvas);
             }
         });
 

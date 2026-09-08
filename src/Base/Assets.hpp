@@ -40,7 +40,6 @@ public:
 
     virtual bool Has(AssetLocation location) const { return Files::Exists(PathOf(location)); }
 
-    // 生のパスを書かせないための内部用
     virtual Expected<std::vector<std::byte>, Error>
     Read(const std::filesystem::path &path) const {
         return Files::ReadBytes(path);

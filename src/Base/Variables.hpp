@@ -100,7 +100,7 @@ template <typename Class, typename Member> struct VariableEntry {
     }
 };
 
-// originalは本家での綴り
+// originalは元の綴り
 // 省いた場合はnameと同じものが入る
 template <typename Class, typename Member>
 constexpr auto Var(Member Class::*pointer, std::string_view name,

@@ -93,7 +93,7 @@ struct ObjectTable {
 };
 
 inline Expected<ObjectTable, TellerEngine::Base::Error>
-ReadObjects(const TellerEngine::Extract::Bytes &bytes, std::string_view name, const Chunk &chunk,
+ReadObjects(const TellerEngine::Extract::FileBytes &bytes, std::string_view name, const Chunk &chunk,
             const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {

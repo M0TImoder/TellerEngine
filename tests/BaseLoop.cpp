@@ -1,4 +1,6 @@
+#include <Base/Canvas.hpp>
 #include <Base/Context.hpp>
+#include <Base/Draw.hpp>
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
 #include <Base/Instances.hpp>
@@ -155,6 +157,8 @@ TEST_CASE("回している最中に論理レートが変わっても刻み幅が
     Base::LoopCycle cycle;
     Base::Input input;
     Base::Context context{instances, globals, random, cycle.Clock(), input};
+    Base::DrawList drawList;
+    Base::Canvas canvas{drawList};
     Base::Scheduler scheduler;
 
     RateChanger *changer =
@@ -166,7 +170,7 @@ TEST_CASE("回している最中に論理レートが変わっても刻み幅が
     cycle.AddElapsed(1000.0);
     int steps = 0;
     while (cycle.ConsumeStep()) {
-        scheduler.Advance(context);
+        scheduler.Advance(context, canvas);
         steps += 1;
     }
 
@@ -181,14 +185,16 @@ TEST_CASE("ゲームコードは仮想クロックだけを読む") {
     Base::LoopCycle cycle;
     Base::Input input;
     Base::Context context{instances, globals, random, cycle.Clock(), input};
+    Base::DrawList drawList;
+    Base::Canvas canvas{drawList};
     Base::Scheduler scheduler;
 
     context.Create<ClockReader>();
 
     cycle.AddElapsed(100.0);
-    scheduler.Advance(context);
+    scheduler.Advance(context, canvas);
     cycle.AddElapsed(50.0);
-    scheduler.Advance(context);
+    scheduler.Advance(context, canvas);
 
     const ClockReader *reader = instances.First<ClockReader>();
     REQUIRE(reader != nullptr);

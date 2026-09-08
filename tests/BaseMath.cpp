@@ -36,16 +36,9 @@ TEST_CASE("標準の丸めとは結果が違う") {
     CHECK(Base::Round(-0.5) == doctest::Approx(0.0));
 }
 
-TEST_CASE("余りの符号は割られる側に従う") {
-    CHECK(Base::Mod(7.0, 3.0) == doctest::Approx(1.0));
-    CHECK(Base::Mod(-7.0, 3.0) == doctest::Approx(-1.0));
-    CHECK(Base::Mod(7.5, 2.0) == doctest::Approx(1.5));
-}
-
 TEST_CASE("度と弧度を行き来できる") {
     CHECK(Base::DegToRad(180.0) == doctest::Approx(Base::kPi));
     CHECK(Base::RadToDeg(Base::kPi) == doctest::Approx(180.0));
-    CHECK(Base::Sqr(4.0) == doctest::Approx(16.0));
 }
 
 TEST_CASE("向きは度で、y軸は下を向く") {

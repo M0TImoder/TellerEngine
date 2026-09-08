@@ -49,18 +49,20 @@ target_include_directories(TellerEngine INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
-target_link_libraries(TellerEngine INTERFACE tl::expected)
+target_link_libraries(TellerEngine INTERFACE tl::expected tomlplusplus::tomlplusplus)
+
+target_compile_definitions(TellerEngine INTERFACE TOML_EXCEPTIONS=0)
 
 if(TELLER_ENABLE_DEBUG_UI)
   target_compile_definitions(TellerEngine INTERFACE TELLER_DEBUG_UI)
 endif()
 
 # プラットフォーム層
-# 本体と分けてあるので、窓を開けない使い方ではSDL3を引き込まない
 if(TELLER_ENABLE_PLATFORM)
-  add_library(TellerEnginePlatform INTERFACE)
+  add_library(TellerEnginePlatform STATIC src/Base/Platform/Image.cpp)
   add_library(TellerEngine::Platform ALIAS TellerEnginePlatform)
-  target_link_libraries(TellerEnginePlatform INTERFACE TellerEngine::TellerEngine SDL3::SDL3)
+  target_link_libraries(TellerEnginePlatform PUBLIC TellerEngine::TellerEngine SDL3::SDL3
+                                             PRIVATE stb::stb)
 endif()
 
 # 抽出ツール

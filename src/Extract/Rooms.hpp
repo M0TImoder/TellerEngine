@@ -139,7 +139,7 @@ ReadRoomList(Span<const std::byte> view, const Chunk &chunk,
 
 } // namespace Detail
 
-inline Expected<RoomTable, TellerEngine::Base::Error> ReadRooms(const TellerEngine::Extract::Bytes &bytes,
+inline Expected<RoomTable, TellerEngine::Base::Error> ReadRooms(const TellerEngine::Extract::FileBytes &bytes,
                                                   std::string_view name,
                                                   const Chunk &chunk,
                                                   const StringTable &strings) {

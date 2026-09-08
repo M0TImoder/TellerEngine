@@ -59,7 +59,6 @@ inline Expected<std::string, Error> ReadText(const std::filesystem::path &path) 
     return std::string(reinterpret_cast<const char *>(bytes->data()), bytes->size());
 }
 
-// 書き込み中に落ちても元のファイルが壊れない
 // 別名で書き切ってから置き換える
 inline Expected<void, Error> WriteAtomic(const std::filesystem::path &path,
                                          Span<const std::byte> content) {

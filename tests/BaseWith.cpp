@@ -58,16 +58,6 @@ TEST_CASE("Withは派生した型も回る") {
     CHECK(TagsOf<SplitBullet>(instances) == std::vector<std::string>{"split"});
 }
 
-TEST_CASE("WithExactは丁度その型だけ回る") {
-    Base::Instances instances;
-    AddBullet(instances, "plain");
-    instances.Create<HomingBullet>();
-
-    std::vector<std::string> tags;
-    instances.WithExact<Bullet>([&](Bullet &bullet) { tags.push_back(bullet.tag); });
-    CHECK(tags == std::vector<std::string>{"plain"});
-}
-
 TEST_CASE("Withは基底越しにも回る") {
     Base::Instances instances;
     AddBullet(instances, "a");
@@ -141,7 +131,6 @@ TEST_CASE("数えるときも派生を含む") {
     instances.Create<Heart>();
 
     CHECK(instances.Count<Bullet>() == 3);
-    CHECK(instances.CountExact<Bullet>() == 1);
     CHECK(instances.Count<HomingBullet>() == 2);
     CHECK(instances.Count<Base::GameObject>() == 4);
     CHECK(instances.Count() == 4);

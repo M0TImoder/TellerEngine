@@ -35,7 +35,7 @@ struct PathTable {
     std::vector<Path> paths;
 };
 
-inline Expected<PathTable, TellerEngine::Base::Error> ReadPaths(const TellerEngine::Extract::Bytes &bytes,
+inline Expected<PathTable, TellerEngine::Base::Error> ReadPaths(const TellerEngine::Extract::FileBytes &bytes,
                                                   std::string_view name,
                                                   const Chunk &chunk,
                                                   const StringTable &strings) {

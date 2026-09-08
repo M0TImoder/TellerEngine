@@ -26,7 +26,7 @@ struct ScriptTable {
 };
 
 inline Expected<ScriptTable, TellerEngine::Base::Error>
-ReadScripts(const TellerEngine::Extract::Bytes &bytes, std::string_view name, const Chunk &chunk,
+ReadScripts(const TellerEngine::Extract::FileBytes &bytes, std::string_view name, const Chunk &chunk,
             const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {

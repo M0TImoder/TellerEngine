@@ -1,4 +1,6 @@
+#include <Base/Canvas.hpp>
 #include <Base/Context.hpp>
+#include <Base/Draw.hpp>
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
 #include <Base/Instances.hpp>
@@ -82,6 +84,8 @@ struct World {
     Base::LoopCycle cycle;
     Base::Input input;
     Base::Context context{instances, globals, random, cycle.Clock(), input};
+    Base::DrawList drawList;
+    Base::Canvas canvas{drawList};
     Base::Scheduler scheduler;
 };
 
@@ -91,10 +95,10 @@ TEST_CASE("インスタンスからグローバルへ届く") {
     World world;
     world.context.Create<Advancer>();
 
-    world.scheduler.Advance(world.context);
+    world.scheduler.Advance(world.context, world.canvas);
     CHECK(world.globals.plot == 1);
 
-    world.scheduler.Advance(world.context);
+    world.scheduler.Advance(world.context, world.canvas);
     CHECK(world.globals.plot == 2);
 }
 
@@ -108,8 +112,8 @@ TEST_CASE("宣言した型と違うグローバルは取り出せない") {
 TEST_CASE("インスタンスから乱数へ届く") {
     World world;
     world.context.Create<Roller>();
-    world.scheduler.Advance(world.context);
-    world.scheduler.Advance(world.context);
+    world.scheduler.Advance(world.context, world.canvas);
+    world.scheduler.Advance(world.context, world.canvas);
 
     CHECK(world.random.Draws() == 2);
     CHECK(world.context.instances.First<Roller>()->drawn >= 0);

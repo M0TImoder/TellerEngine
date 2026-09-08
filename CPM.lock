@@ -39,3 +39,12 @@ CPMDeclarePackage(SDL3
     "SDL_EXAMPLES OFF"
     "SDL_INSTALL OFF"
 )
+
+# toml++ v3.4.0
+CPMDeclarePackage(tomlplusplus
+  NAME tomlplusplus
+  GITHUB_REPOSITORY marzer/tomlplusplus
+  GIT_TAG 30172438cee64926dc41fdd9c11fb3ba5b2ba9de
+  EXCLUDE_FROM_ALL YES
+  SYSTEM YES
+)

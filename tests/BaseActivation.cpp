@@ -53,7 +53,6 @@ TEST_CASE("止めたインスタンスは存在しないものとして扱われ
     CHECK_FALSE(instances.Exists<Bullet>());
     CHECK(instances.Count() == 0);
     CHECK(instances.Count<Bullet>() == 0);
-    CHECK(instances.CountExact<Bullet>() == 0);
     CHECK(instances.First<Bullet>() == nullptr);
 }
 
@@ -90,16 +89,16 @@ TEST_CASE("止めたインスタンスはどのフェーズにも入らない") 
     Base::Scheduler scheduler;
     const Base::InstanceId id = AddBullet(instances, 1);
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(instances.Find<Bullet>(id)->steps == 1);
 
     instances.Deactivate(id);
-    scheduler.Advance(world.context);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(instances.Find<Bullet>(id)->steps == 1);
 
     instances.Activate(id);
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(instances.Find<Bullet>(id)->steps == 2);
 }
 

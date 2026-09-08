@@ -1,4 +1,6 @@
 #include <Base/GameObject.hpp>
+#include <Base/Canvas.hpp>
+#include <Base/Draw.hpp>
 #include <Base/Instances.hpp>
 #include <Base/Scheduler.hpp>
 #include <Base/Variables.hpp>
@@ -20,7 +22,7 @@ std::vector<std::string> drawn;
 struct Layer : Base::GameObject {
     std::string tag = "?";
 
-    void Draw(Base::Context &) override { drawn.push_back(tag); }
+    void Draw(Base::Context &, Base::Canvas &) override { drawn.push_back(tag); }
 
     static constexpr auto Variables() {
         return Base::Extend(Base::GameObject::Variables(),
@@ -37,8 +39,9 @@ Layer &Add(Base::Instances &instances, std::string tag, double depth) {
 
 std::vector<std::string> DrawOrder(TellerTest::World &world) {
     drawn.clear();
-    world.instances.ForEachByDepth(
-        [&world](Base::GameObject &object) { object.Draw(world.context); });
+    world.instances.ForEachByDepth([&world](Base::GameObject &object) {
+        object.Draw(world.context, world.canvas);
+    });
     return drawn;
 }
 
@@ -126,7 +129,7 @@ TEST_CASE("スケジューラのDrawがdepth順になる") {
     Add(instances, "front", -5.0);
     Add(instances, "back", 5.0);
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(drawn == std::vector<std::string>{"back", "front"});
 }
 
@@ -139,6 +142,6 @@ TEST_CASE("描かれないインスタンスは並びを崩さない") {
     Add(instances, "hidden", 0.0).visible = false;
     Add(instances, "front", -5.0);
 
-    scheduler.Advance(world.context);
+    scheduler.Advance(world.context, world.canvas);
     CHECK(drawn == std::vector<std::string>{"back", "front"});
 }

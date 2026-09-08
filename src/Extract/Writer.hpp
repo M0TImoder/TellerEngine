@@ -4,7 +4,7 @@
 
 #include <Base/Compat.hpp>
 #include <Base/Error.hpp>
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Extract/GameData.hpp>
 
 #include <cstddef>
@@ -39,7 +39,7 @@ struct WriteOptions {
 };
 
 Expected<WriteReport, Base::Error>
-WriteAssets(const Bytes &bytes, std::string_view dataName, const GameData &game,
+WriteAssets(const FileBytes &bytes, std::string_view dataName, const GameData &game,
             const std::filesystem::path &out, const WriteOptions &options);
 
 } // namespace TellerEngine::Extract

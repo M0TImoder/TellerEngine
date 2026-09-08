@@ -7,6 +7,7 @@
 
 namespace TellerEngine::Base {
 
+class Canvas;
 class Context;
 
 // インスタンスを指す値
@@ -40,7 +41,10 @@ public:
         (void)other;
     }
     virtual void EndStep(Context &context) { (void)context; }
-    virtual void Draw(Context &context) { (void)context; }
+    virtual void Draw(Context &context, Canvas &canvas) {
+        (void)context;
+        (void)canvas;
+    }
 
     InstanceId id = InstanceId::None;
     double x = 0.0;

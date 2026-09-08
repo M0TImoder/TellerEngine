@@ -18,7 +18,7 @@ struct RawChunk {
 };
 
 inline Expected<RawChunk, Base::Error>
-ReadRawChunk(const Bytes &bytes, std::string_view name,
+ReadRawChunk(const FileBytes &bytes, std::string_view name,
              const Chunk &chunk) {
     auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {
@@ -35,7 +35,7 @@ struct Language {
 };
 
 inline Expected<Language, Base::Error>
-ReadLanguage(const Bytes &bytes, std::string_view name,
+ReadLanguage(const FileBytes &bytes, std::string_view name,
              const Chunk &chunk, const StringTable &strings) {
     const auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {
@@ -80,7 +80,7 @@ struct CountedList {
 };
 
 inline Expected<CountedList, Base::Error>
-ReadCountedList(const Bytes &bytes, std::string_view name,
+ReadCountedList(const FileBytes &bytes, std::string_view name,
                 const Chunk &chunk) {
     const auto contents = ReadChunk(bytes, name, chunk);
     if (!contents) {

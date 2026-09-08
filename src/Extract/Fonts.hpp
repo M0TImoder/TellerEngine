@@ -61,7 +61,7 @@ struct FontTable {
 };
 
 inline Expected<FontTable, TellerEngine::Base::Error>
-ReadFonts(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadFonts(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
           const Chunk &chunk, const StringTable &strings,
           const TextureRegionTable &regions) {
     const auto contents = ReadChunk(bytes, name, chunk);

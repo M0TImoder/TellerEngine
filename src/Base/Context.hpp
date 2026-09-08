@@ -26,7 +26,6 @@ public:
     Globals &globals;
     Random &random;
 
-    // 本家のcurrent_timeにあたる
     const VirtualClock &clock;
 
     const Input &input;

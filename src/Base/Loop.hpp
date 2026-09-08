@@ -99,6 +99,16 @@ public:
 
     std::int64_t PendingMicroseconds() const { return pending_; }
 
+    // 次の論理ステップまでのどこにいるか
+    double Progress() const {
+        if (rates_.logic <= 0) {
+            return 0.0;
+        }
+        const double interval = kSecond / static_cast<double>(rates_.logic);
+        const double progress = static_cast<double>(pending_) / interval;
+        return progress < 0.0 ? 0.0 : (progress > 1.0 ? 1.0 : progress);
+    }
+
     Snapshot Save() const { return Snapshot{rates_, pending_, carry_, clock_.Microseconds()}; }
 
     void Restore(const Snapshot &snapshot) {

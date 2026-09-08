@@ -40,7 +40,6 @@ inline GamepadKind KindOf(SDL_GamepadType type) {
 }
 
 // 割り当ては刻印ではなく位置で決める
-// 下が決定、右が取消になり、どの系統でもその土地の作法に合う
 inline std::optional<Button> ButtonOf(SDL_GamepadButton button) {
     switch (button) {
     case SDL_GAMEPAD_BUTTON_DPAD_LEFT:

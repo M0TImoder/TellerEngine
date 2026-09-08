@@ -28,7 +28,7 @@ struct Recorder : Base::GameObject {
         calls.emplace_back("Collision");
     }
     void EndStep(Base::Context &) override { calls.emplace_back("EndStep"); }
-    void Draw(Base::Context &) override { calls.emplace_back("Draw"); }
+    void Draw(Base::Context &, Base::Canvas &) override { calls.emplace_back("Draw"); }
 
     static constexpr auto Variables() {
         return Base::Extend(Base::GameObject::Variables(),
@@ -42,13 +42,14 @@ struct Silent : Base::GameObject {
     static constexpr auto Variables() { return Base::GameObject::Variables(); }
 };
 
-void RunPhases(Base::Context &context, Base::GameObject &object, Base::GameObject &other) {
+void RunPhases(Base::Context &context, Base::Canvas &canvas, Base::GameObject &object,
+               Base::GameObject &other) {
     object.BeginStep(context);
     object.Alarm(context);
     object.Step(context);
     object.Collision(context, other);
     object.EndStep(context);
-    object.Draw(context);
+    object.Draw(context, canvas);
 }
 
 } // namespace
@@ -57,7 +58,7 @@ TEST_CASE("既定のフックは何もしない") {
     TellerTest::World world;
     Silent silent;
     Silent other;
-    RunPhases(world.context, silent, other);
+    RunPhases(world.context, world.canvas, silent, other);
     CHECK(silent.x == doctest::Approx(0.0));
     CHECK(silent.visible);
     CHECK(silent.active);
@@ -69,7 +70,7 @@ TEST_CASE("派生クラスがフックを差し替えられる") {
     Recorder recorder;
     Silent other;
     recorder.Create(world.context);
-    RunPhases(world.context, recorder, other);
+    RunPhases(world.context, world.canvas, recorder, other);
     recorder.Destroy(world.context);
 
     CHECK(recorder.calls == std::vector<std::string>{"Create", "BeginStep", "Alarm", "Step",

@@ -4,7 +4,7 @@
 // 固定部60バイトのあとに、テクスチャ矩形へのポインタと当たり判定マスクが続く
 // 実体は可変長で、マスクの末尾は4バイト境界に揃えられる
 
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 #include <Extract/Chunks.hpp>
 #include <Extract/Reader.hpp>
@@ -60,7 +60,7 @@ struct SpriteTable {
 // regionsはTPAGの読み取り結果
 // フレームが実在する矩形を指しているかを確かめるために受け取る
 inline Expected<SpriteTable, TellerEngine::Base::Error>
-ReadSprites(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadSprites(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
             const Chunk &chunk, const StringTable &strings,
             const TextureRegionTable &regions) {
     const auto contents = bytes.Read(name, chunk.offset, chunk.size);
@@ -166,7 +166,7 @@ ReadSprites(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
 // 1行あたりmaskStrideバイト、1ビットが1ピクセル
 inline Expected<TellerEngine::Extract::ByteBuffer,
                 TellerEngine::Base::Error>
-ReadSpriteMask(const TellerEngine::Extract::Bytes &bytes,
+ReadSpriteMask(const TellerEngine::Extract::FileBytes &bytes,
                std::string_view name, const Sprite &sprite,
                std::uint32_t index) {
     if (index >= sprite.maskCount) {

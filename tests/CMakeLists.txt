@@ -25,6 +25,7 @@ add_executable(TellerTests
   BaseActivation.cpp
   BaseContext.cpp
   BaseDepth.cpp
+  BaseDraw.cpp
   BaseFiles.cpp
   BaseGameObject.cpp
   BaseGlobals.cpp
@@ -32,6 +33,7 @@ add_executable(TellerTests
   BaseInstances.cpp
   BaseLoop.cpp
   BaseMath.cpp
+  BasePresent.cpp
   BaseRandom.cpp
   BaseScheduler.cpp
   BaseState.cpp
@@ -49,8 +51,10 @@ add_executable(TellerTests
   ExtractTextures.cpp
   PlatformGamepad.cpp
   PlatformLoop.cpp
+  PlatformRenderer.cpp
   PlatformSingleThread.cpp
   PlatformStorage.cpp
+  VanillaSprite.cpp
   PlatformSystem.cpp
   ${all_headers_path}
 )

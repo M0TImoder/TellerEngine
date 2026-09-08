@@ -72,14 +72,13 @@ protected:
             return;
         }
 #if defined(__EMSCRIPTEN__)
-        // ここでスタックを巻き戻し、次の描画機会で同じ場所から再開する
+        // スタックを巻き戻して次の描画機会で再開する
         emscripten_sleep(static_cast<unsigned int>((target - spent) / 1000000));
 #else
         SDL_DelayNS(target - spent);
 #endif
     }
 
-    // 経過した実時間から論理を進める
     int Advance(std::uint64_t elapsedNanoseconds) {
         // 1000で割った端数を持ち越す
         nanoseconds_ += static_cast<std::int64_t>(elapsedNanoseconds);
@@ -87,7 +86,7 @@ protected:
         nanoseconds_ -= microseconds * 1000;
         cycle_.AddElapsedMicroseconds(microseconds);
 
-        // 論理と表示が同じレートなら本家と同じく1反復1ステップにする
+        // 論理と表示が同じレートなら1反復1ステップ
         if (policy_ == StepPolicy::Locked && cycle_.LogicRate() == cycle_.DisplayRate() &&
             cycle_.LogicRate() > 0) {
             cycle_.DropPending();

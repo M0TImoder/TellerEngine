@@ -3,7 +3,7 @@
 // 抽出結果の保持
 
 #include <Base/Compat.hpp>
-#include <Extract/Bytes.hpp>
+#include <Extract/FileBytes.hpp>
 #include <Base/Error.hpp>
 #include <Extract/Backgrounds.hpp>
 #include <Extract/Chunks.hpp>
@@ -125,7 +125,7 @@ inline TellerEngine::Base::Error MissingChunk(std::string_view name) {
 } // namespace GameDataDetail
 
 inline Expected<GameData, TellerEngine::Base::Error>
-LoadGameData(const TellerEngine::Extract::Bytes &bytes,
+LoadGameData(const TellerEngine::Extract::FileBytes &bytes,
              std::string_view name = "data.win") {
     GameData data;
 

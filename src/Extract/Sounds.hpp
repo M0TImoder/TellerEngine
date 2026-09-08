@@ -47,7 +47,7 @@ struct SoundTable {
 };
 
 inline Expected<SoundTable, TellerEngine::Base::Error>
-ReadSounds(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadSounds(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
            const Chunk &chunk, const StringTable &strings,
            std::uint8_t bytecodeVersion) {
     const auto contents = ReadChunk(bytes, name, chunk);
@@ -111,7 +111,7 @@ struct AudioTable {
 };
 
 inline Expected<AudioTable, TellerEngine::Base::Error>
-ReadAudio(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
+ReadAudio(const TellerEngine::Extract::FileBytes &bytes, std::string_view name,
           const Chunk &chunk) {
     const auto head = bytes.Read(name, chunk.offset, 4);
     if (!head) {
@@ -164,7 +164,7 @@ ReadAudio(const TellerEngine::Extract::Bytes &bytes, std::string_view name,
 
 inline Expected<TellerEngine::Extract::ByteBuffer,
                 TellerEngine::Base::Error>
-ReadAudioClip(const TellerEngine::Extract::Bytes &bytes,
+ReadAudioClip(const TellerEngine::Extract::FileBytes &bytes,
               std::string_view name, const AudioClip &clip) {
     return bytes.Read(name, clip.offset, clip.size);
 }

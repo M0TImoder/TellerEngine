@@ -1,4 +1,6 @@
+#include <Base/Canvas.hpp>
 #include <Base/Context.hpp>
+#include <Base/Draw.hpp>
 #include <Base/GameObject.hpp>
 #include <Base/Globals.hpp>
 #include <Base/Instances.hpp>
@@ -66,12 +68,14 @@ struct World {
     Base::LoopCycle cycle;
     Base::Input input;
     Base::Context context{instances, globals, random, cycle.Clock(), input};
+    Base::DrawList drawList;
+    Base::Canvas canvas{drawList};
     Base::Scheduler scheduler;
 
     void Run(int frames) {
         for (int i = 0; i < frames; ++i) {
             cycle.AddElapsed(1000.0 / 30.0);
-            scheduler.Advance(context);
+            scheduler.Advance(context, canvas);
         }
     }
 

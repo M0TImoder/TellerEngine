@@ -1,7 +1,7 @@
 #pragma once
 
-// GMの乱数を再現する
-// 状態はWELL512aの16語、種はLCGを16回回して展開する
+// WELL512a
+// 状態は16語、種はLCGを16回回して展開する
 
 #include <array>
 #include <cstdint>
@@ -18,7 +18,6 @@ enum class SeedMode {
 
 class Random {
 public:
-    // 巻き戻しに必要な状態
     struct Snapshot {
         std::array<std::uint32_t, 16> words{};
         std::uint32_t index = 0;
@@ -83,7 +82,6 @@ public:
     // 上端を含まない
     constexpr double Real(double bound) { return Unit() * bound; }
 
-    // random_rangeと同じ
     constexpr double RealRange(double low, double high) { return low + Real(high - low); }
 
     // 両端を含む
@@ -91,12 +89,10 @@ public:
         return static_cast<std::int64_t>(Unit() * static_cast<double>(bound + 1));
     }
 
-    // irandom_rangeと同じ
     constexpr std::int64_t IntegerRange(std::int64_t low, std::int64_t high) {
         return low + Integer(high - low);
     }
 
-    // chooseと同じ
     template <typename T> constexpr T Choose(std::initializer_list<T> values) {
         if (values.size() == 0) {
             return T{};

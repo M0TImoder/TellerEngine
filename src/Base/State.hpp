@@ -12,7 +12,7 @@
 
 namespace TellerEngine::Base {
 
-// 巻き戻しに要るものを1つにまとめる
+// 巻き戻しに要るもの
 template <typename G> struct StateSnapshot {
     static_assert(std::is_base_of_v<Globals, G>);
 
