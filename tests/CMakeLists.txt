@@ -28,6 +28,7 @@ add_executable(TellerTests
   BaseDepth.cpp
   BaseDraw.cpp
   BaseFiles.cpp
+  BaseFontInfo.cpp
   BaseGameObject.cpp
   BaseGlobals.cpp
   BaseInput.cpp
@@ -38,8 +39,14 @@ add_executable(TellerTests
   BaseRandom.cpp
   BaseScheduler.cpp
   BaseState.cpp
+  BaseText.cpp
+  BaseTextDraw.cpp
+  BaseTextLayout.cpp
+  BaseTextTyper.cpp
+  BaseTrueType.cpp
   BaseVariableCheck.cpp
   BaseVariables.cpp
+  BaseUtf8.cpp
   BaseWith.cpp
   Compat.cpp
   DataBytes.cpp
@@ -55,6 +62,9 @@ add_executable(TellerTests
   PlatformRenderer.cpp
   PlatformSingleThread.cpp
   PlatformStorage.cpp
+  Literals.cpp
+  TellerMarkup.cpp
+  VanillaLegacyMarkup.cpp
   VanillaSprite.cpp
   PlatformSystem.cpp
   ${all_headers_path}

@@ -112,6 +112,23 @@ public:
         return static_cast<ImageId>(sprites_.size());
     }
 
+    // 焼いた絵をそのまま登録する
+    Expected<ImageId, Error> Add(const Pixels &pixels, double originX, double originY) {
+        SDL_Texture *texture = Upload(pixels);
+        if (texture == nullptr) {
+            return Unexpected<Error>(Error{ErrorCode::Unavailable, SDL_GetError()});
+        }
+
+        SpriteEntry sprite;
+        sprite.originX = originX;
+        sprite.originY = originY;
+        sprite.width = pixels.width;
+        sprite.height = pixels.height;
+        sprite.frames.push_back(texture);
+        sprites_.push_back(std::move(sprite));
+        return static_cast<ImageId>(sprites_.size());
+    }
+
     const SpriteEntry *Find(ImageId image) const {
         const auto index = static_cast<std::uint32_t>(image);
         if (index < 1 || index > sprites_.size() || sprites_[index - 1].frames.empty()) {

@@ -1,9 +1,11 @@
 #pragma once
 
 #include <Base/BackgroundInfo.hpp>
+#include <Base/FontInfo.hpp>
 #include <Base/Compat.hpp>
 #include <Base/Error.hpp>
 #include <Base/Platform/Textures.hpp>
+#include <Base/Platform/TrueType.hpp>
 #include <Base/SpriteInfo.hpp>
 
 #include <SDL3/SDL.h>
@@ -66,6 +68,54 @@ public:
         return *image;
     }
 
+    // 定義があれば書き出した絵を、無ければフォントファイルを焼く
+    Expected<FontFace, Error> Font(const std::string &name,
+                                   const TrueTypeSettings &settings = {}) {
+        if (const auto found = fonts_.find(name); found != fonts_.end()) {
+            return FontFace{&found->second.info, found->second.image};
+        }
+
+        const std::filesystem::path fonts = root_ / "Fonts";
+        const std::filesystem::path definition = fonts / (name + ".toml");
+
+        FontInfo info;
+        ImageId image = ImageId::None;
+
+        if (Files::Exists(definition)) {
+            auto read = ReadFontInfo(definition);
+            if (!read) {
+                return Unexpected<Error>(read.error());
+            }
+            const std::vector<std::filesystem::path> frames{fonts / (name + ".png")};
+            const auto placed =
+                textures_.Add(Span<const std::filesystem::path>{frames}, 0.0, 0.0);
+            if (!placed) {
+                return Unexpected<Error>(placed.error());
+            }
+            info = std::move(*read);
+            image = *placed;
+        } else {
+            const std::filesystem::path outline = OutlinePath(fonts, name);
+            if (outline.empty()) {
+                return Unexpected<Error>(
+                    Error{ErrorCode::NotFound, definition.string()});
+            }
+            auto baked = LoadTrueType(outline, settings);
+            if (!baked) {
+                return Unexpected<Error>(baked.error());
+            }
+            const auto placed = textures_.Add(baked->pixels, 0.0, 0.0);
+            if (!placed) {
+                return Unexpected<Error>(placed.error());
+            }
+            info = std::move(baked->info);
+            image = *placed;
+        }
+
+        const auto placed = fonts_.emplace(name, LoadedFont{std::move(info), image});
+        return FontFace{&placed.first->second.info, placed.first->second.image};
+    }
+
     // 読み込み済みのスプライトの定義
     const SpriteInfo *InfoOf(const std::string &name) const {
         const auto found = infos_.find(name);
@@ -75,11 +125,28 @@ public:
     std::size_t Count() const { return textures_.Count(); }
 
 private:
+    static std::filesystem::path OutlinePath(const std::filesystem::path &fonts,
+                                             const std::string &name) {
+        for (const char *extension : {".ttf", ".otf", ".ttc"}) {
+            const std::filesystem::path candidate = fonts / (name + extension);
+            if (Files::Exists(candidate)) {
+                return candidate;
+            }
+        }
+        return {};
+    }
+
+    struct LoadedFont {
+        FontInfo info;
+        ImageId image = ImageId::None;
+    };
+
     Textures textures_;
     std::filesystem::path root_;
     std::unordered_map<std::string, ImageId> sprites_;
     std::unordered_map<std::string, ImageId> backgrounds_;
     std::unordered_map<std::string, SpriteInfo> infos_;
+    std::unordered_map<std::string, LoadedFont> fonts_;
 };
 
 } // namespace TellerEngine::Base::Platform
