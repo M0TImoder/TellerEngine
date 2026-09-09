@@ -60,10 +60,11 @@ endif()
 # プラットフォーム層
 if(TELLER_ENABLE_PLATFORM)
   add_library(TellerEnginePlatform STATIC src/Base/Platform/Image.cpp
-                                        src/Base/Platform/TrueType.cpp)
+                                        src/Base/Platform/TrueType.cpp
+                                        src/Base/Platform/AudioDevice.cpp)
   add_library(TellerEngine::Platform ALIAS TellerEnginePlatform)
   target_link_libraries(TellerEnginePlatform PUBLIC TellerEngine::TellerEngine SDL3::SDL3
-                                             PRIVATE stb::stb)
+                                             PRIVATE stb::stb miniaudio::miniaudio)
 endif()
 
 # 抽出ツール

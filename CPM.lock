@@ -48,3 +48,11 @@ CPMDeclarePackage(tomlplusplus
   EXCLUDE_FROM_ALL YES
   SYSTEM YES
 )
+
+# miniaudio 0.11.25
+CPMDeclarePackage(miniaudio
+  NAME miniaudio
+  GITHUB_REPOSITORY mackron/miniaudio
+  GIT_TAG 9634bedb5b5a2ca38c1ee7108a9358a4e233f14d
+  DOWNLOAD_ONLY YES
+)

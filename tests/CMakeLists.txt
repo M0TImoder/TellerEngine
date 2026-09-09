@@ -23,6 +23,7 @@ target_link_libraries(TellerExtractImage PUBLIC TellerEngine::TellerEngine stb::
 add_executable(TellerTests
   Main.cpp
   BaseActivation.cpp
+  BaseAudio.cpp
   BaseBoundary.cpp
   BaseContext.cpp
   BaseDepth.cpp
@@ -65,6 +66,7 @@ add_executable(TellerTests
   Literals.cpp
   TellerMarkup.cpp
   VanillaLegacyMarkup.cpp
+  VanillaSound.cpp
   VanillaSprite.cpp
   PlatformSystem.cpp
   ${all_headers_path}

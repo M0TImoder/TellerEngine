@@ -28,6 +28,14 @@ CPMGetPackage(tomlplusplus)
 # ウィンドウ・入力・ゲームパッド
 if(TELLER_ENABLE_PLATFORM)
   CPMGetPackage(SDL3)
+
+  # 音声
+  CPMGetPackage(miniaudio)
+  if(miniaudio_ADDED)
+    add_library(miniaudio INTERFACE)
+    add_library(miniaudio::miniaudio ALIAS miniaudio)
+    target_include_directories(miniaudio SYSTEM INTERFACE ${miniaudio_SOURCE_DIR})
+  endif()
 endif()
 
 # doctest
