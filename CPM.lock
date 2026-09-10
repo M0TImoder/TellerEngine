@@ -56,3 +56,11 @@ CPMDeclarePackage(miniaudio
   GIT_TAG 9634bedb5b5a2ca38c1ee7108a9358a4e233f14d
   DOWNLOAD_ONLY YES
 )
+
+# Dear ImGui v1.92.4 docking
+CPMDeclarePackage(imgui
+  NAME imgui
+  GITHUB_REPOSITORY ocornut/imgui
+  GIT_TAG 6e42d802fad80cd83de5e0d0bff1465f5f5615a2
+  DOWNLOAD_ONLY YES
+)

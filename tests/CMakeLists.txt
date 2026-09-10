@@ -58,6 +58,8 @@ add_executable(TellerTests
   ExtractSprites.cpp
   ExtractStrings.cpp
   ExtractTextures.cpp
+  PlatformDebugPanels.cpp
+  PlatformDebugUi.cpp
   PlatformGamepad.cpp
   PlatformLoop.cpp
   PlatformRenderer.cpp
@@ -79,3 +81,10 @@ target_compile_definitions(TellerTests PRIVATE
   TELLER_SOURCE_DIR="${PROJECT_SOURCE_DIR}/src")
 
 add_test(NAME TellerTests COMMAND TellerTests)
+
+# 切ったビルドにImGuiが混ざっていないことを毎回確かめる
+if(NOT TELLER_ENABLE_DEBUG_UI)
+  add_test(NAME TellerNoDebugUi COMMAND ${CMAKE_COMMAND}
+    -DTARGET=$<TARGET_FILE:TellerTests>
+    -P ${PROJECT_SOURCE_DIR}/cmake/NoDebugUi.cmake)
+endif()

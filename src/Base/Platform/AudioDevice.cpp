@@ -76,6 +76,11 @@ struct AudioDevice::State {
     std::uint32_t nextName = 1;
 
     ~State() {
+        for (Voice &voice : voices) {
+            if (voice.sound != nullptr) {
+                ma_sound_uninit(voice.sound.get());
+            }
+        }
         voices.clear();
         for (Loaded &loaded : sounds) {
             if (loaded.prototype != nullptr) {

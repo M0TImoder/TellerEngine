@@ -33,6 +33,7 @@ public:
         slot.id = id;
         slot.type = TypeIdOf<T>();
         slot.clone = &CloneOf<T>;
+        slot.visit = &VisitOf<T>;
         slot.object = std::make_unique<T>(std::forward<Args>(args)...);
         slot.alive = true;
         slot.object->id = id;
@@ -216,6 +217,33 @@ public:
         }
     }
 
+    // 生成したときの型の表をfn(descriptor, ref)へ渡す
+    // 基底越しでも派生の分まで回る
+    template <typename Fn> void WithVariables(InstanceId id, Fn &&fn) {
+        Slot *slot = FindSlot(id);
+        if (slot == nullptr || !slot->alive || slot->visit == nullptr) {
+            return;
+        }
+        auto callable = std::forward<Fn>(fn);
+        slot->visit(
+            *slot->object,
+            [](void *user, const VariableDescriptor &descriptor, VariableRef ref) {
+                (*static_cast<decltype(callable) *>(user))(descriptor, ref);
+            },
+            &callable);
+    }
+
+    // activeでないものも生成順にfn(GameObject&)へ渡す
+    template <typename Fn> void ForEachAll(Fn &&fn) {
+        const std::size_t count = slots_.size();
+        for (std::size_t i = 0; i < count; ++i) {
+            Slot &slot = slots_[i];
+            if (slot.alive) {
+                fn(*slot.object);
+            }
+        }
+    }
+
     // depthの大きい順にfn(GameObject&)を渡す
     // 同じdepthは生成順
     template <typename Fn> void ForEachByDepth(Fn &&fn) {
@@ -292,15 +320,28 @@ public:
 private:
     using CloneFn = std::unique_ptr<GameObject> (*)(const GameObject &);
 
+    using VariableVisitor = void (*)(void *user, const VariableDescriptor &descriptor,
+                                     VariableRef ref);
+    using VisitFn = void (*)(GameObject &object, VariableVisitor visitor, void *user);
+
     template <typename T>
     static std::unique_ptr<GameObject> CloneOf(const GameObject &source) {
         return std::make_unique<T>(static_cast<const T &>(source));
+    }
+
+    template <typename T>
+    static void VisitOf(GameObject &object, VariableVisitor visitor, void *user) {
+        ForEachVariable(static_cast<T &>(object),
+                        [&](const VariableDescriptor &descriptor, VariableRef ref) {
+                            visitor(user, descriptor, ref);
+                        });
     }
 
     struct Slot {
         InstanceId id = InstanceId::None;
         TypeId type = nullptr;
         CloneFn clone = nullptr;
+        VisitFn visit = nullptr;
         std::unique_ptr<GameObject> object;
         bool alive = false;
 
@@ -309,6 +350,7 @@ private:
             copy.id = id;
             copy.type = type;
             copy.clone = clone;
+            copy.visit = visit;
             copy.object = clone != nullptr ? clone(*object) : nullptr;
             copy.alive = alive;
             return copy;

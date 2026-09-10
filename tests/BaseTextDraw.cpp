@@ -22,6 +22,8 @@
 namespace Base = TellerEngine::Base;
 namespace Teller = TellerEngine::Teller;
 
+#if !defined(__EMSCRIPTEN__)
+
 namespace {
 
 std::filesystem::path AssetRoot() {
@@ -33,12 +35,6 @@ bool HasFonts() {
     const auto root = AssetRoot();
     return !root.empty() && std::filesystem::is_directory(root / "Fonts");
 }
-
-} // namespace
-
-#if !defined(__EMSCRIPTEN__)
-
-namespace {
 
 namespace Platform = TellerEngine::Base::Platform;
 

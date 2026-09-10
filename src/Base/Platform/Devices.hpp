@@ -55,12 +55,23 @@ public:
         SDL_free(ids);
     }
 
+    using EventObserver = void (*)(void *user, const SDL_Event &event);
+
+    // 捌く前に全てのイベントを覗く口
+    void Observe(EventObserver observer, void *user) {
+        observer_ = observer;
+        user_ = user;
+    }
+
     // 溜まったイベントを捌く
     // 閉じる要求が来たらfalseを返す
     bool Pump(Input &input) {
         bool running = true;
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            if (observer_ != nullptr) {
+                observer_(user_, event);
+            }
             running = Handle(event) && running;
         }
 
@@ -190,6 +201,8 @@ private:
     std::uint32_t pad_ = 0;
     std::uint32_t stick_ = 0;
     int deadZone_ = 8000;
+    EventObserver observer_ = nullptr;
+    void *user_ = nullptr;
     std::vector<SDL_Gamepad *> pads_;
 };
 
